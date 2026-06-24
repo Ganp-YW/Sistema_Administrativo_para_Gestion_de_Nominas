@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<HBox style="-fx-background-color: white; -fx-padding: 0;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.Provider">
+    <children>
+        <VBox prefWidth="300.0" style="-fx-padding: 8;">
+            <Label>Nombre</Label>
+            <TextField fx:id="providerName" promptText="Nombre del proveedor" />
+            <Label>Cedula</Label>
+            <TextField fx:id="providerCI" promptText="Cedula del proveedor" />
+            <Label>Telefono</Label>
+            <TextField fx:id="providerPhone" promptText="Telefono del proveedor" />
+            <Label>Rif</Label>
+            <TextField fx:id="providerRif" promptText="Rif del proveedor" />
+            <Label>Empresa</Label>
+            <TextField fx:id="providerBusiness" promptText="Empresa del proveedor" />
+            <Label>Tipo de cobranza</Label>
+            <ComboBox fx:id="providerPayType" promptText="Selecciona una opción" />
+            <Label>Inventario Preferido</Label>
+            <ComboBox fx:id="providerPrefItem" promptText="Selecciona una opción" />
+            <Separator style="-fx-padding: 10 0;" />
+            <Button fx:id="saveButton" onAction="#saveProvider">Guardar</Button>
+            <Button fx:id="deleteButton" onAction="#deleteProvider">Eliminar</Button>
+        </VBox>
+
+        <VBox style=" -fx-padding: 8;" HBox.hgrow="ALWAYS">
+            <HBox>
+                <Button prefHeight="30.0" prefWidth="80.0">Boton</Button>
+                <TextField prefHeight="30.0" prefWidth="200.0">
+                    
+                </TextField>
+            </HBox>
+            
+            <TableView VBox.vgrow="ALWAYS">
+            <columns>
+               <TableColumn prefWidth="30" text="Id" />
+               <TableColumn prefWidth="75.0" text="Nombre" />
+               <TableColumn prefWidth="75.0" text="CI" />
+               <TableColumn prefWidth="75.0" text="Telf" />
+               <TableColumn prefWidth="75.0" text="Rif" />
+               <TableColumn prefWidth="75.0" text="Empresa" />
+               <TableColumn prefWidth="75.0" text="Prod. Prefs" />
+               <TableColumn prefWidth="75.0" text="Tipo Cobro" />
+               <TableColumn prefWidth="75.0" text="U. Compra" />
+               <TableColumn prefWidth="75.0" text="F. Registro" />
+            </columns>
+            </TableView>
+        </VBox>
+          
+    </children>
+</HBox>
