@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Separator?>
@@ -12,42 +13,45 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<HBox styleClass="close" stylesheets="@../Styles/table.css" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.ClientsController">
+<HBox styleClass="close" stylesheets="@../Styles/table.css" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.ClientsController">
     <children>
-        
-        <VBox prefWidth="320.0" spacing="12.0" style="-fx-background-color: #f8f9fa; -fx-padding: 20; -fx-border-color: #e0e0e0; -fx-border-width: 0 1 0 0;">
+        <ScrollPane fitToWidth="true" style="-fx-background-color: transparent; -fx-background: #1e1e1e; -fx-border-color: #333333; -fx-border-width: 0 1 0 0;" prefWidth="350.0" minWidth="350.0">
+            <content>
+                <VBox spacing="12.0" style="-fx-background-color: #1e1e1e; -fx-padding: 20;">
             
-            <Label text="Nombre" style="-fx-font-weight: bold; -fx-font-size: 14px;" />
+            <Label text="Nombre" style="-fx-font-weight: bold; -fx-font-size: 12px; -fx-text-fill: #e0e0e0;" />
             <TextField fx:id="clientName" promptText="Ej. Juan Pérez" styleClass="buscar-field" />
             
-            <Label text="Cédula" style="-fx-font-weight: bold; -fx-font-size: 14px;" />
+            <Label text="Cédula" style="-fx-font-weight: bold; -fx-font-size: 12px; -fx-text-fill: #e0e0e0;" />
             <TextField fx:id="clientCI" promptText="Ej. 12345678" styleClass="buscar-field" />
             
-            <Label text="Teléfono" style="-fx-font-weight: bold; -fx-font-size: 14px;" />
+            <Label text="Teléfono" style="-fx-font-weight: bold; -fx-font-size: 12px; -fx-text-fill: #e0e0e0;" />
             <TextField fx:id="clientPhone" promptText="Ej. 0414-1234567" styleClass="buscar-field" />
             
-            <Label text="RIF" style="-fx-font-weight: bold; -fx-font-size: 14px;" />
+            <Label text="RIF" style="-fx-font-weight: bold; -fx-font-size: 12px; -fx-text-fill: #e0e0e0;" />
             <TextField fx:id="clientRif" promptText="Ej. J-12345678-9" styleClass="buscar-field" />
             
-            <Label text="Empresa" style="-fx-font-weight: bold; -fx-font-size: 14px;" />
+            <Label text="Empresa" style="-fx-font-weight: bold; -fx-font-size: 12px; -fx-text-fill: #e0e0e0;" />
             <TextField fx:id="clientBusiness" promptText="Nombre de la empresa" styleClass="buscar-field" />
             
-            <Label text="Tipo de Cobranza" style="-fx-font-weight: bold; -fx-font-size: 14px;" />
+            <Label text="Tipo de Cobranza" style="-fx-font-weight: bold; -fx-font-size: 12px; -fx-text-fill: #e0e0e0;" />
             <ComboBox fx:id="clientPayType" maxWidth="1.7976931348623157E308" promptText="Selecciona una opción" styleClass="list-view" />
             
-            <Label text="Inventario Preferido" style="-fx-font-weight: bold; -fx-font-size: 14px;" />
+            <Label text="Inventario Preferido" style="-fx-font-weight: bold; -fx-font-size: 12px; -fx-text-fill: #e0e0e0;" />
             <ComboBox fx:id="clientPrefItem" maxWidth="1.7976931348623157E308" promptText="Selecciona una opción" styleClass="list-view" />
             
-            <Separator style="-fx-padding: 10 0;" />
+            <Separator style="-fx-padding: 5 0;" />
             
-            <VBox spacing="10.0">
-                <Button fx:id="saveButton" maxWidth="1.7976931348623157E308" onAction="#saveClient" styleClass="Guardar" text="Guardar Cliente" />
-                <Button fx:id="deleteButton" maxWidth="1.7976931348623157E308" onAction="#deleteClient" styleClass="Eliminar" text="Eliminar Cliente" />
-            </VBox>
+            <HBox spacing="10.0">
+                <Button fx:id="saveButton" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" onAction="#saveClient" styleClass="Guardar" text="Guardar" />
+                <Button fx:id="deleteButton" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" onAction="#deleteClient" styleClass="Eliminar" text="Eliminar" />
+            </HBox>
             
-        </VBox>
+                </VBox>
+            </content>
+        </ScrollPane>
 
-        <VBox spacing="15.0" style="-fx-background-color: white; -fx-padding: 20;" HBox.hgrow="ALWAYS">
+        <VBox spacing="15.0" style="-fx-background-color: #121212; -fx-padding: 20;" HBox.hgrow="ALWAYS">
             
             <HBox alignment="CENTER_LEFT" spacing="10.0">
                 <TextField prefHeight="36.0" promptText="Buscar cliente por nombre o cédula..." styleClass="buscar-field" HBox.hgrow="ALWAYS" />

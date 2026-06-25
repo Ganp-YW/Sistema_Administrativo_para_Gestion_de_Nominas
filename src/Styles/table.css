@@ -14,7 +14,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
     -fx-border-width: 0;
     -fx-background-radius: 0;
     -fx-font-family:"Segoe UI", Helvetica, Arial, sans-serif;
-    -fx-font-size: 1em; /* 12 */
+    -fx-font-size: 12px;
     -fx-font-weight: bold;
     -fx-background-radius: 20;
     -fx-padding: 8 20 8 20;
@@ -48,20 +48,19 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
 
 
 .buscar-field {
-    -fx-background-color: white;
-    -fx-background-radius: 20; /* Bordes muy redondeados */
-    -fx-border-color: #dcdcdc; /* Gris claro */
+    -fx-background-color: #2d2d2d;
+    -fx-background-radius: 20;
+    -fx-border-color: #444444;
     -fx-border-radius: 20;
-    -fx-padding: 5 15 5 30; /* Espacio extra a la izquierda para un icono */
-    -fx-font-size: 14px;
-    -fx-text-fill: #333333;
-    -fx-prompt-text-fill: #a0a0a0; /* Color del texto de sugerencia */
+    -fx-padding: 8 15 8 30;
+    -fx-font-size: 12px;
+    -fx-text-fill: #e0e0e0;
+    -fx-prompt-text-fill: #808080;
 }
 
-/* Efecto cuando el usuario hace clic o escribe */
 .buscar-field:focused {
-    -fx-border-color: #4a90e2; /* Azul suave */
-    -fx-background-color: #ffffff;
+    -fx-border-color: #4a90e2;
+    -fx-background-color: #333333;
     -fx-effect: dropshadow(three-pass-box, rgba(74, 144, 226, 0.2), 10, 0, 0, 0);
 }
 
@@ -75,28 +74,26 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
 }
 
 .combo-box-moderno .arrow {
-    -fx-background-color: #666666; /* Color de la flecha */
-    -fx-shape: "M 0 0 L 4 4 L 8 0 Z"; /* Forma de flecha minimalista */
+    -fx-background-color: #e0e0e0;
+    -fx-shape: "M 0 0 L 4 4 L 8 0 Z";
 }
 
-/* Estilo de la lista desplegable (el menú que baja) */
 .combo-box-moderno .list-view {
-    -fx-background-color: white;
+    -fx-background-color: #2d2d2d;
     -fx-background-radius: 10;
-    -fx-border-color: #dcdcdc;
+    -fx-border-color: #444444;
     -fx-border-radius: 10;
-    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5);
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 10, 0, 0, 5);
 }
 
-/* Estilo de los elementos dentro de la lista */
 .combo-box-moderno .list-cell {
     -fx-padding: 8 15 8 15;
     -fx-background-color: transparent;
-    -fx-text-fill: #333333;
+    -fx-text-fill: #e0e0e0;
 }
 
 .combo-box-moderno .list-cell:hover {
-    -fx-background-color: #f0f7ff; /* Color al pasar el mouse por una opción */
+    -fx-background-color: #333333;
     -fx-text-fill: #4a90e2;
 }
 
@@ -118,46 +115,47 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
 
 /* Estilo del encabezado (las columnas arriba) */
 .tabla-moderna .column-header-background {
-    -fx-background-color: #f8f9fa; /* Gris muy claro */
+    -fx-background-color: #2a2a2a;
     -fx-background-radius: 10 10 0 0;
-    -fx-border-color: transparent transparent #dcdcdc transparent; /* Línea solo abajo */
+    -fx-border-color: transparent transparent #444444 transparent;
 }
 
 .tabla-moderna .column-header {
     -fx-background-color: transparent;
-    -fx-size: 40; /* Altura del encabezado */
+    -fx-size: 40;
 }
 
 .tabla-moderna .column-header .label {
-    -fx-text-fill: #555555;
+    -fx-text-fill: #e0e0e0;
     -fx-font-weight: bold;
+    -fx-font-size: 13px;
     -fx-alignment: CENTER_LEFT;
 }
 
-/* Estilo de las celdas y filas */
 .tabla-moderna .table-row-cell {
-    -fx-background-color: white;
-    -fx-border-color: transparent transparent #f0f0f0 transparent; /* Línea divisoria sutil */
-    -fx-cell-size: 35; /* Altura de la fila */
+    -fx-background-color: #1e1e1e;
+    -fx-border-color: transparent transparent #2a2a2a transparent;
+    -fx-cell-size: 35;
 }
 
-/* Filas alternas (Efecto Cebra) */
 .tabla-moderna .table-row-cell:odd {
-    -fx-background-color: #fafafa;
+    -fx-background-color: #252525;
 }
 
-/* Efecto al pasar el mouse por una fila */
 .tabla-moderna .table-row-cell:hover {
-    -fx-background-color: #eef5ff;
+    -fx-background-color: #333333;
 }
 
-/* Fila seleccionada */
 .tabla-moderna .table-row-cell:selected {
     -fx-background-color: #4a90e2;
 }
 
-.tabla-moderna .table-row-cell:selected .text {
-    -fx-fill: white; /* Texto blanco cuando se selecciona */
+.tabla-moderna .table-cell {
+    -fx-text-fill: #e0e0e0;
+}
+
+.tabla-moderna .table-row-cell:selected .table-cell {
+    -fx-text-fill: white;
 }
 
 /* Eliminar el cuadro vacío que sobra a la derecha si hay pocas columnas */

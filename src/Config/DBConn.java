@@ -49,8 +49,12 @@ public class DBConn {
         DBConn.URL = "jdbc:postgresql://" + HOST + ":" + PORT + "/" + DB;
     }
 
-    public static Connection getConnection() throws IOException {
-        if (!initialized) initDBConf();
+    public static Connection getConnection() {
+        try {
+            if (!initialized) initDBConf();
+        } catch (IOException e) {
+            System.err.println("Error reading DB configuration: " + e.getMessage());
+        }
             
         Connection conn = null;
         

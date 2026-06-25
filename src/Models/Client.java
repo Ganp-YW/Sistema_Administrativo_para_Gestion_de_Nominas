@@ -124,42 +124,33 @@ public class Client {
         return addedDate;
     }
 
-    public static ResultSet getClients() {
+    public static ObservableList<Client> fillClientList(ObservableList<Client> list) {
         try (Connection conn = DBConn.getConnection()) {
             Statement st = conn.createStatement();
-            ResultSet rs = st.executeQuery("SELECT * FROM public.clientes");
-
-            return rs;
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Error:" + e.toString());
-        }
-        return null;
-    }
-
-    public static ObservableList<Client> fillClientList(ObservableList<Client> list) {
-        try {
-            ResultSet clients = Models.Client.getClients();
+            ResultSet clients = st.executeQuery("SELECT * FROM public.clientes");
 
             while (clients.next()) {
                 int id = Integer.parseInt(clients.getString(1));
 
                 list.add(new Client(
                         id,
-                        clients.getString(2),
-                        clients.getString(3),
-                        clients.getString(4),
-                        clients.getString(5),
-                        clients.getString(6),
-                        clients.getString(7),
-                        clients.getString(8),
-                        clients.getString(9),
-                        clients.getString(10)
+                        clients.getString(2), // nombre
+                        clients.getString(3), // cedula
+                        clients.getString(4), // telefono
+                        clients.getString(5), // rif
+                        clients.getString(6), // empresa
+                        clients.getString(7), // tipo_cobranza
+                        clients.getString(8), // inventario_preferido
+                        "N/A",                // lastPurchase (no está en la tabla)
+                        clients.getString(9)  // fecha_registro
                 ));
             }
             return list;
         } catch (SQLException e) {
-
+            System.err.println("Error obteniendo clientes: " + e.getMessage());
+        } catch (Exception e) {
+            System.err.println("Error inesperado: " + e.getMessage());
         }
-        return null;
+        return list;
     }
 }

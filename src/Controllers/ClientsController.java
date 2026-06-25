@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package Controllers;
+package controllers;
 
 import Models.Client;
 import java.net.URL;
@@ -10,6 +10,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Optional;
 import java.util.ResourceBundle;
+
+import Models.Client;
+import Dao.ClienteDAO;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -23,6 +26,8 @@ import javafx.scene.control.cell.PropertyValueFactory;
  */
 public class ClientsController {
 
+    private int currentClientId = 0;
+
     @FXML
     Button saveButton;
     @FXML
@@ -34,6 +39,10 @@ public class ClientsController {
     TextField clientCI;
     @FXML
     TextField clientPhone;
+    @FXML
+    TextField clientRif;
+    @FXML
+    TextField clientBusiness;
 
     @FXML
     ComboBox<String> clientPayType;
@@ -68,7 +77,10 @@ public class ClientsController {
 
     @FXML
     public void initialize() {
-        // TODO: Cargar datos para los select (ComboBox) 
+        // Cargar datos para los select (ComboBox)
+        clientPayType.setItems(FXCollections.observableArrayList("Efectivo", "Transferencia", "Pago Móvil", "Crédito"));
+        clientPrefItem.setItems(FXCollections.observableArrayList("Harina", "Arroz", "Pasta", "Azúcar", "Café", "Víveres en General"));
+        
         ColId.setCellValueFactory(new PropertyValueFactory<>("id"));
         ColName.setCellValueFactory(new PropertyValueFactory<>("name"));
         ColCI.setCellValueFactory(new PropertyValueFactory<>("document")); // Atributo se llama document
@@ -80,6 +92,21 @@ public class ClientsController {
         ColLastBuy.setCellValueFactory(new PropertyValueFactory<>("lastPurchase"));
         ColAddedDate.setCellValueFactory(new PropertyValueFactory<>("addedDate"));
 
+        // Listener para selección de tabla
+        ClientTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+            if (newSelection != null) {
+                currentClientId = newSelection.getId();
+                clientName.setText(newSelection.getName());
+                clientCI.setText(newSelection.getDocument());
+                clientPhone.setText(newSelection.getPhoneNum());
+                clientRif.setText(newSelection.getRif());
+                clientBusiness.setText(newSelection.getEmpresa());
+                clientPayType.setValue(newSelection.getTypeCharge());
+                clientPrefItem.setValue(newSelection.getPreferedproducts());
+                saveButton.setText("Actualizar");
+            }
+        });
+
         clientList = Client.fillClientList(clientList);
 
         ClientTable.setItems(clientList);
@@ -87,35 +114,108 @@ public class ClientsController {
 
     @FXML
     private void saveClient() {
-        String name = clientName.getText();
-        String ci = clientCI.getText();
-
-        String payType = (String) clientPayType.getValue();
-        System.out.println(payType);
-
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Cliente registrado");
-        alert.setContentText("¡Se ha registrado el cliente!");
-        alert.showAndWait();
+        // 1. Leer los datos de la vista
+        String nom = clientName.getText();
+        String ced = clientCI.getText();
+        String tel = clientPhone.getText();
+        String rif = clientRif.getText();
+        String emp = clientBusiness.getText();
+        String tipoCob = clientPayType.getValue(); // Si es un ComboBox
+        String invPref = clientPrefItem.getValue();
+        // 2. Crear el objeto con tu Modelo
+        Client nuevoCliente = new Client(currentClientId, nom, ced, tel, rif, emp, tipoCob, invPref, "", "");
+        // 3. Pasarlo al DAO para que haga la magia SQL
+        ClienteDAO dao = new ClienteDAO();
+        
+        boolean res = false;
+        if (currentClientId == 0) {
+            res = dao.guardar(nuevoCliente);
+        } else {
+            res = dao.modificar(nuevoCliente);
+        }
+        
+        if (res) {
+            System.out.println("¡Cliente procesado correctamente!");
+            
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Cliente procesado");
+            alert.setContentText(currentClientId == 0 ? "¡Se ha registrado el cliente exitosamente!" : "¡Se ha actualizado el cliente exitosamente!");
+            alert.showAndWait();
+            
+            // Limpiar las cajas de texto
+            clientName.clear();
+            clientCI.clear();
+            clientPhone.clear();
+            clientRif.clear();
+            clientBusiness.clear();
+            clientPayType.setValue(null);
+            clientPrefItem.setValue(null);
+            
+            currentClientId = 0;
+            saveButton.setText("Guardar");
+            ClientTable.getSelectionModel().clearSelection();
+            
+            // Actualizar la tabla
+            clientList.clear();
+            Client.fillClientList(clientList);
+        } else {
+            System.out.println("Error guardando el cliente.");
+            
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setContentText("Hubo un error al intentar guardar el cliente en la base de datos.");
+            alert.showAndWait();
+        }
     }
 
     @FXML
     private void deleteClient() {
-        Alert finalMessage = new Alert(Alert.AlertType.INFORMATION);
+        Client selected = ClientTable.getSelectionModel().getSelectedItem();
+        if (selected == null) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Ningún cliente seleccionado");
+            alert.setContentText("Por favor selecciona un cliente de la tabla para eliminar.");
+            alert.showAndWait();
+            return;
+        }
+
         Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmation.setTitle("Confirmar eliminación");
+        confirmation.setHeaderText("Eliminar cliente");
+        confirmation.setContentText("¿Estás seguro de que quieres eliminar al cliente " + selected.getName() + "?");
 
         Optional<ButtonType> result = confirmation.showAndWait();
 
         if (result.isPresent() && result.get() == ButtonType.OK) {
-            // Código si presionó OK
-            finalMessage.setTitle("Cliente Eliminado");
-            finalMessage.setContentText("¡Se ha Eliminado el cliente!");
-            finalMessage.showAndWait();
-        } else {
-            // Código si canceló o cerró
-            finalMessage.setTitle("Cliente no eliminado");
-            finalMessage.setContentText("¡No se ha eliminado el cliente!");
-            finalMessage.showAndWait();
+            ClienteDAO dao = new ClienteDAO();
+            if (dao.eliminar(selected.getId())) {
+                Alert finalMessage = new Alert(Alert.AlertType.INFORMATION);
+                finalMessage.setTitle("Cliente Eliminado");
+                finalMessage.setContentText("¡Se ha Eliminado el cliente exitosamente!");
+                finalMessage.showAndWait();
+                
+                // Actualizar tabla
+                clientList.clear();
+                Client.fillClientList(clientList);
+                
+                // Limpiar formulario si el cliente borrado estaba seleccionado en el form
+                if (currentClientId == selected.getId()) {
+                    clientName.clear();
+                    clientCI.clear();
+                    clientPhone.clear();
+                    clientRif.clear();
+                    clientBusiness.clear();
+                    clientPayType.setValue(null);
+                    clientPrefItem.setValue(null);
+                    currentClientId = 0;
+                    saveButton.setText("Guardar");
+                }
+            } else {
+                Alert error = new Alert(Alert.AlertType.ERROR);
+                error.setTitle("Error");
+                error.setContentText("Hubo un problema al intentar eliminar el cliente.");
+                error.showAndWait();
+            }
         }
     }
 }

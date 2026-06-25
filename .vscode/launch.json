@@ -3,6 +3,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "DBConn",
+            "request": "launch",
+            "mainClass": "Config.DBConn",
+            "projectName": "Sistema-DonTomas_6a7c03af"
+        },
+        {
+            "type": "java",
             "name": "Launch App.Main",
             "request": "launch",
             "mainClass": "App.Main",
