@@ -4,80 +4,96 @@
  */
 package Config;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.*;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.ResultSet;
-import java.sql.PreparedStatement;
 import java.sql.Statement;
-import java.util.Properties;
+
+import io.zonky.test.db.postgres.embedded.EmbeddedPostgres;
 
 /**
  *
  * @author joseh
  */
-
 public class DBConn {
 
     private static Boolean initialized = false;
-    private static Path confRoute = Path.of(Path.of("").toAbsolutePath().toString(), "src", "Config","config.properties");
-    private static String HOST = "";
-    private static String PORT = "";
-    private static String DB = "";
-    private static String USER = "";
-    private static String PASSWORD = "";
+    private static EmbeddedPostgres pg = null;
     private static String URL = "";
+    private static String USER = "postgres";
+    private static String PASSWORD = "";
 
-    private static void initDBConf() throws FileNotFoundException, IOException {
-        DBConn.initialized = true;
-
-        Properties prop = new Properties();
-        try (InputStream input = new FileInputStream(confRoute.toString())) {
-            prop.load(input);
+    private static void initDBConf() {
+        try {
+            System.out.println("Iniciando PostgreSQL Embebido...");
+            System.out.println("Si es la primera vez que se ejecuta en esta PC, esto puede demorar mientras se descargan los binarios.");
+            
+            File dataDir = new File(Path.of("").toAbsolutePath().toString(), "database_data");
+            boolean isFirstRun = !dataDir.exists();
+            
+            pg = EmbeddedPostgres.builder()
+                    .setDataDirectory(dataDir)
+                    .setCleanDataDirectory(false)
+                    .start();
+            
+            URL = pg.getJdbcUrl("postgres", "postgres");
+            
+            if (isFirstRun) {
+                System.out.println("Primera ejecución detectada. Inicializando tablas...");
+                executeInitSql();
+            }
+            
+            initialized = true;
+            System.out.println("Base de datos levantada con éxito en: " + URL);
+        } catch (IOException e) {
+            System.err.println("Error iniciando base de datos embebida: " + e.getMessage());
+            e.printStackTrace();
         }
-        
-        DBConn.HOST = prop.getProperty("db.HOST");
-        DBConn.PORT = prop.getProperty("db.PORT");
-        DBConn.DB = prop.getProperty("db.DB");
-        DBConn.USER = prop.getProperty("db.USER");
-        DBConn.PASSWORD = prop.getProperty("db.PASSWORD");
-        DBConn.URL = "jdbc:postgresql://" + HOST + ":" + PORT + "/" + DB;
+    }
+
+    private static void executeInitSql() {
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+             Statement stmt = conn.createStatement()) {
+            
+            Path sqlPath = Path.of(Path.of("").toAbsolutePath().toString(), "init.sql");
+            if (Files.exists(sqlPath)) {
+                String sql = Files.readString(sqlPath);
+                stmt.execute(sql);
+                System.out.println("Tablas de init.sql creadas con éxito.");
+            } else {
+                System.err.println("No se encontró el archivo init.sql en la raíz del proyecto.");
+            }
+        } catch (Exception e) {
+            System.err.println("Error ejecutando init.sql: " + e.getMessage());
+        }
     }
 
     public static Connection getConnection() {
-        try {
-            if (!initialized) initDBConf();
-        } catch (IOException e) {
-            System.err.println("Error reading DB configuration: " + e.getMessage());
+        if (!initialized) {
+            initDBConf();
         }
-            
-        Connection conn = null;
         
+        Connection conn = null;
         try {
-            conn = DriverManager.getConnection(URL, USER, PASSWORD);
-        } catch (SQLException e) {
-            try {
-                System.err.println("Error al conectar: " + e.toString());
-                System.err.println("Reintendando con conexion provisional");
-                conn = DriverManager.getConnection("jdbc:postgresql://host:5432/db", "user", "pass"); // Conexion provicional
-            } catch (SQLException err) {
-                System.err.println(err.toString());
-                System.err.println("\nError al conectar: " + err.getMessage());
+            if (URL != null && !URL.isEmpty()) {
+                conn = DriverManager.getConnection(URL, USER, PASSWORD);
             }
+        } catch (SQLException e) {
+            System.err.println("Error al conectar: " + e.getMessage());
         }
         return conn;
     }
 
     public static void main(String[] args) {
-        System.out.println("Prueba de Conexion:");
+        System.out.println("Prueba de Conexion a Embedded PostgreSQL:");
 
         try (Connection conn = DBConn.getConnection()) {
             if (conn == null) {
+                System.out.println("La conexión falló.");
                 return;
             }
 
@@ -87,14 +103,8 @@ public class DBConn {
             while (rs.next()) {
                 System.out.println("Resultado de la BD: " + rs.getString("saludo"));
             }
-
-//            try-with-resources cierra la conexion automaticamente           
-//            rs.close();
-//            stmt.close();
-//            conn.close(); 
         } catch (Exception e) {
             System.err.println("Error en la consulta: " + e.getMessage());
         }
-
     }
 }

@@ -17,6 +17,14 @@ import javafx.stage.Stage;
 public class Main extends Application {
 
     @Override
+    public void init() throws Exception {
+        // Inicializar la base de datos (y descargar binarios si es necesario) 
+        // ANTES de cargar la interfaz. Esto previene errores de vistas que 
+        // asumen que la base de datos ya está lista.
+        Config.DBConn.getConnection();
+    }
+
+    @Override
     public void start(Stage primaryStage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("/Views/PrincipalView.fxml"));
         Scene scene = new Scene(root);

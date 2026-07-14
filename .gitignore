@@ -2,3 +2,6 @@
 config.properties
 /nbproject/private/
 /build/
+
+database_data/
+lib/embedded-postgres*
