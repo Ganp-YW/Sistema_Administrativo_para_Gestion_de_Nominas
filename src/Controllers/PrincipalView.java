@@ -4,6 +4,7 @@
  */
 package controllers;
 
+import Config.DBConn;
 import java.io.IOException;
 import javafx.fxml.*;
 import javafx.scene.control.*;
@@ -13,27 +14,119 @@ import javafx.stage.*;
 import java.awt.Desktop;
 import java.net.URI;
 import javafx.event.ActionEvent;
-
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import javafx.animation.KeyFrame;
+import javafx.animation.ScaleTransition;
+import javafx.animation.Timeline;
+import javafx.scene.effect.DropShadow;
+import javafx.scene.paint.Color;
+import javafx.util.Duration;
+import javafx.fxml.FXML;
 /**
  *
  * @author joseh
  */
 public class PrincipalView {
-    @FXML
-    private StackPane tabContainer;
 
     @FXML
+    private StackPane tabContainer;
+    @FXML
     private Label lblInfo;
+    @FXML
+    private Label lblTotalProveedores;
+    @FXML
+    private Label lblTotalEmpleados;
+    @FXML
+    private Label lblTotalClientes;
+    @FXML
+    private VBox cardProveedores;
+    @FXML
+    private VBox cardEmpleados;
+    @FXML
+    private VBox cardClientes;
 
     private javafx.scene.Node defaultContent;
 
     // Se ejecuta automáticamente al cargar el FXML
     @FXML
     public void initialize() {
+
         ViewManager.init(tabContainer); // Inicializar ViewManager con el contenedor
         if (!tabContainer.getChildren().isEmpty()) {
             defaultContent = tabContainer.getChildren().get(0);
         }
+        configurarEfectosHover();
+        cargarResumen();
+
+    }
+
+    private void configurarEfectosHover() {
+        agregarEfectoZoom(cardProveedores);
+        agregarEfectoZoom(cardEmpleados);
+        agregarEfectoZoom(cardClientes);
+    }
+
+    /**
+     * Helper que aplica la transición de escala a un contenedor VBox.
+     */
+    private void agregarEfectoZoom(VBox tarjeta) {
+        if (tarjeta == null) {
+            return;
+        }
+
+        DropShadow shadow = new DropShadow();
+        shadow.setColor(Color.BLACK);
+        shadow.setRadius(10);
+        shadow.setSpread(0.2);
+
+        // Al entrar el mouse: se agranda un 5% (1.05) de forma fluida
+        tarjeta.setOnMouseEntered(e -> {
+            ScaleTransition st = new ScaleTransition(Duration.millis(150), tarjeta);
+            st.setToX(1.05);
+            st.setToY(1.05);
+            st.play();
+
+            tarjeta.setEffect(shadow);
+        });
+
+        // Al salir el mouse: regresa a su tamaño original (1.0)
+        tarjeta.setOnMouseExited(e -> {
+            ScaleTransition st = new ScaleTransition(Duration.millis(150), tarjeta);
+            st.setToX(1.0);
+            st.setToY(1.0);
+            st.play();
+
+            tarjeta.setEffect(null);
+        });
+    }
+
+    /**
+     * Realiza un conteo progresivo animado en un Label desde 0 hasta el valor
+     * final.
+     */
+    private void animarConteo(Label label, int valorFinal) {
+        if (valorFinal <= 0) {
+            label.setText("0");
+            return;
+        }
+
+        Timeline timeline = new Timeline();
+        int duracionMs = 800; // Duración total de la animación en milisegundos
+        int pasos = Math.min(valorFinal, 30); // Máximo 30 pasos para no saturar la UI con números grandes
+        int intervalo = duracionMs / pasos;
+
+        for (int i = 0; i <= pasos; i++) {
+            final int valorActual = (int) ((double) valorFinal * i / pasos);
+            KeyFrame keyFrame = new KeyFrame(
+                    Duration.millis(i * intervalo),
+                    e -> label.setText(String.valueOf(valorActual))
+            );
+            timeline.getKeyFrames().add(keyFrame);
+        }
+        timeline.play();
     }
 
     @FXML
@@ -82,6 +175,8 @@ public class PrincipalView {
             tabContainer.getChildren().add(defaultContent);
         }
         lblInfo.setText("Listo. Sistema iniciado.");
+
+        cargarResumen();
     }
 
     // Auxiliar
@@ -90,13 +185,49 @@ public class PrincipalView {
         double width = tabContainer.getWidth();
         double height = tabContainer.getHeight();
 
-        if (width == 0)
+        if (width == 0) {
             width = 800;
-        if (height == 0)
+        }
+        if (height == 0) {
             height = 600;
+        }
 
         // Cargar vista
         ViewManager.loadView(TabShortened, width, height);
         lblInfo.setText(TabInfo);
+    }
+
+    /**
+     * Cuenta registros de una tabla en la base de datos
+     *
+     * @param
+     * @return
+     */
+    private int contarRegistros(String nombreTabla) {
+        int total = 0;
+        String sql = "SELECT COUNT(*) AS total FROM " + nombreTabla;
+
+        try (Connection conn = DBConn.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql); ResultSet rs = pstmt.executeQuery()) {
+            if (rs.next()) {
+                total = rs.getInt("total");
+            }
+        } catch (SQLException e) {
+            System.err.println("Error en el motor de consulta para [" + nombreTabla + "]: " + e.getMessage());
+        }
+        return total;
+    }
+
+    public void cargarResumen() {
+        int totalEmpleados = contarRegistros("empleados");
+        int totalClientes = contarRegistros("clientes");
+        int totalProveedores = contarRegistros("proveedores");
+
+        //lblTotalEmpleados.setText(String.valueOf(totalEmpleados));
+        //lblTotalClientes.setText(String.valueOf(totalClientes));
+        //lblTotalProveedores.setText(String.valueOf(totalProveedores));
+        animarConteo(lblTotalEmpleados, totalEmpleados);
+        animarConteo(lblTotalClientes, totalClientes);
+        animarConteo(lblTotalProveedores, totalProveedores);
+
     }
 }

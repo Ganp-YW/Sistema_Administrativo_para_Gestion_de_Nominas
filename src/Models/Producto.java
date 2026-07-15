@@ -26,6 +26,8 @@ public class Producto {
         this.precioUnitario = precioUnitario;
         this.fechaRegistro = fechaRegistro;
     }
+    
+    public Producto(){}
 
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }

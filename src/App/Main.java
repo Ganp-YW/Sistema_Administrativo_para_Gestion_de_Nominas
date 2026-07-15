@@ -20,8 +20,11 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("/Views/PrincipalView.fxml"));
         Scene scene = new Scene(root);
+        
         scene.getStylesheets().add(getClass().getResource("/Styles/table.css").toExternalForm());
-        primaryStage.setTitle("Hello World");
+        primaryStage.setTitle("Sistema Administrativo para Gestion de Nominas");
+        primaryStage.setMinWidth(1024);
+        primaryStage.setMinHeight(768);
         primaryStage.setScene(scene);
         primaryStage.show();
     }
