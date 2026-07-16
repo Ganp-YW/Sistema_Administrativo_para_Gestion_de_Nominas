@@ -1,1 +1,1 @@
-C:/Users/gerar/AppData/Local/Temp/embedded-pg/PG-e15014ff91239515f7e433ead7e53a8f/bin/postgres.exe "-D" "C:/Users/gerar/Documents/Codigo/Sistema/Sistema-DonTomas/database_data" "-p" "61791" "-F" "-c" "synchronous_commit=off" "-c" "max_connections=300" "-c" "timezone=UTC"
+C:/Users/gerar/AppData/Local/Temp/embedded-pg/PG-e15014ff91239515f7e433ead7e53a8f/bin/postgres.exe "-D" "C:/Users/gerar/Documents/Codigo/Sistema/Sistema-DonTomas/database_data" "-p" "65272" "-F" "-c" "synchronous_commit=off" "-c" "max_connections=300" "-c" "timezone=UTC"
