@@ -1,5 +1,0 @@
-db.HOST=host
-db.PORT=port
-db.DB=db
-db.USER=user
-db.PASSWORD=pass
