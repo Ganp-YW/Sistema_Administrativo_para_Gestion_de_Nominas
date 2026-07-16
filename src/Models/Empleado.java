@@ -26,6 +26,7 @@ public class Empleado {
         this.salario = salario;
         this.fechaIngreso = fechaIngreso;
     }
+    public Empleado(){}
 
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }

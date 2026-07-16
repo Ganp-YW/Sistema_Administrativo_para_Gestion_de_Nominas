@@ -42,7 +42,7 @@ public class EmpleadoDAO {
             return false;
         }
     }
-
+    
     public boolean eliminar(int id) {
         String sql = "DELETE FROM empleados WHERE id=?";
         try (Connection conn = DBConn.getConnection();

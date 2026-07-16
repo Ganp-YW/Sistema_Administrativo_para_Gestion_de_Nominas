@@ -60,7 +60,7 @@
                     <graphic>
                         <ImageView fitHeight="18.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
                             <image>
-                                <Image url="@../mediafiles/searchicon.png" />
+                                <Image url="@../mediafiles/busqueda.png" />
                             </image>
                         </ImageView>
                     </graphic>

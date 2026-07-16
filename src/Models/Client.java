@@ -41,6 +41,8 @@ public class Client {
         setLastPurchase(lastPurchase);
         setAddedDate(addedDate);
     }
+    
+    public Client(){}
 
     //setters
     public void setCodigo(int id) {

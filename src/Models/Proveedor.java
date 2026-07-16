@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import javafx.collections.ObservableList;
 
+
 public class Proveedor {
 
     int id;
@@ -32,6 +33,8 @@ public class Proveedor {
         this.lastPurchase = lastPurchase;
         this.addedDate = addedDate;
     }
+    
+    public Proveedor(){}
 
     // getters and setters
     public int getId() { return id; }

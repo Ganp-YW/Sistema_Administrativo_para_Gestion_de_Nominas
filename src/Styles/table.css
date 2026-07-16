@@ -29,6 +29,16 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
     -fx-border-radius: 0, 0;
     -fx-border-insets: 1 1 1 1, 0;
 }
+
+.dashboard-card {
+    -fx-background-color: #1A1A1A;
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-border-width: 2;
+    -fx-cursor: default;
+    -fx-transition: all 0.15s ease-in-out; /* Opcional si usas motores que lo soporten */
+}
+
 /*hover*/
 .button:hover {
     -fx-background-color: black;
@@ -43,6 +53,35 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
     -fx-background-color: blue;
     -fx-text-fill: white;
     
+}
+
+
+/* Efecto hover general */
+.dashboard-card:hover {
+    -fx-background-color: #2D2D2D; /* Cambia el color de fondo a un gris más claro */
+    -fx-scale-x: 1.05;             /* Pequeño zoom horizontal */
+    -fx-scale-y: 1.05;             /* Pequeño zoom vertical */
+}
+
+.card-proveedor { 
+    -fx-border-color: #1e8449; 
+}
+.card-proveedor:hover {
+    -fx-effect: dropshadow(three-pass-box, rgba(30, 132, 73, 0.4), 15, 0, 0, 0);
+}
+
+.card-empleado { 
+    -fx-border-color: #6c3483; 
+}
+.card-empleado:hover {
+    -fx-effect: dropshadow(three-pass-box, rgba(108, 52, 131, 0.4), 15, 0, 0, 0);
+}
+
+.card-cliente { 
+    -fx-border-color: #1f618d; 
+}
+.card-cliente:hover {
+    -fx-effect: dropshadow(three-pass-box, rgba(31, 97, 141, 0.4), 15, 0, 0, 0);
 }
 
 
@@ -172,4 +211,59 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
 .tabla-moderna .scroll-bar:vertical .thumb {
     -fx-background-color: #cdcdcd;
     -fx-background-radius: 10;
+}
+
+
+.scroll-pane {
+    -fx-background-color: transparent;
+    -fx-control-inner-background: transparent;
+}
+
+.scroll-pane > .viewport {
+    -fx-background-color: transparent;
+}
+
+/* Fondo de la barra completa (Transparente o del color de tu panel) */
+.scroll-bar:vertical,
+.scroll-bar:horizontal {
+    -fx-background-color: #1e1e1e;
+    -fx-pref-width: 10px;  /* Hace la barra vertical más delgada */
+    -fx-pref-height: 10px; /* Hace la barra horizontal más delgada */
+}
+
+/* El "riel" por donde se desliza la barra */
+.scroll-bar:vertical .track,
+.scroll-bar:horizontal .track {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
+/* La barra deslizable (Thumb) */
+.scroll-bar:vertical .thumb,
+.scroll-bar:horizontal .thumb {
+    -fx-background-color: #444444; /* Color gris oscuro */
+    -fx-background-radius: 5px; /* Bordes redondeados */
+}
+
+/* Efecto Hover al pasar el mouse sobre la barra deslizable */
+.scroll-bar:vertical .thumb:hover,
+.scroll-bar:horizontal .thumb:hover {
+    -fx-background-color: #666666; /* Se ilumina ligeramente */
+}
+
+/* Ocultar los botones de las flechas (arriba/abajo - izquierda/derecha) */
+.scroll-bar:vertical .increment-button,
+.scroll-bar:vertical .decrement-button,
+.scroll-bar:horizontal .increment-button,
+.scroll-bar:horizontal .decrement-button {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+}
+
+.scroll-bar:vertical .increment-arrow,
+.scroll-bar:vertical .decrement-arrow,
+.scroll-bar:horizontal .increment-arrow,
+.scroll-bar:horizontal .decrement-arrow {
+    -fx-shape: " "; /* Elimina la forma de la flecha */
+    -fx-padding: 0;
 }
