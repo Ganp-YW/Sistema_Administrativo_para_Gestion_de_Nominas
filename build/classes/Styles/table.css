@@ -1,0 +1,175 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to edit this template
+*/
+/* 
+    Created on : 15 ene. 2026, 11:11:43 p. m.
+    Author     : FABIOPRO
+*/
+
+
+
+.button{
+    -fx-border-color:grey;
+    -fx-border-width: 0;
+    -fx-background-radius: 0;
+    -fx-font-family:"Segoe UI", Helvetica, Arial, sans-serif;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 20;
+    -fx-padding: 8 20 8 20;
+    -fx-cursor: hand; /* Cambia el cursor a mano */
+    
+}
+
+.button:focused {
+    -fx-border-color: transparent, black;
+    -fx-border-width: 1, 1;
+    -fx-border-style: solid, segments(1, 2);
+    -fx-border-radius: 0, 0;
+    -fx-border-insets: 1 1 1 1, 0;
+}
+/*hover*/
+.button:hover {
+    -fx-background-color: black;
+    -fx-text-fill: white;
+}
+
+.button:hover.Eliminar {
+    -fx-background-color: red;
+    -fx-text-fill: white;
+}
+.button:hover.Guardar {
+    -fx-background-color: blue;
+    -fx-text-fill: white;
+    
+}
+
+
+
+.buscar-field {
+    -fx-background-color: #2d2d2d;
+    -fx-background-radius: 20;
+    -fx-border-color: #444444;
+    -fx-border-radius: 20;
+    -fx-padding: 8 15 8 30;
+    -fx-font-size: 12px;
+    -fx-text-fill: #e0e0e0;
+    -fx-prompt-text-fill: #808080;
+}
+
+.buscar-field:focused {
+    -fx-border-color: #4a90e2;
+    -fx-background-color: #333333;
+    -fx-effect: dropshadow(three-pass-box, rgba(74, 144, 226, 0.2), 10, 0, 0, 0);
+}
+
+
+
+/*combobox*/
+/* Estilo de la flecha (flecha hacia abajo) */
+.combo-box-moderno .arrow-button {
+    -fx-background-color: transparent;
+    -fx-padding: 0 10 0 5;
+}
+
+.combo-box-moderno .arrow {
+    -fx-background-color: #e0e0e0;
+    -fx-shape: "M 0 0 L 4 4 L 8 0 Z";
+}
+
+.combo-box-moderno .list-view {
+    -fx-background-color: #2d2d2d;
+    -fx-background-radius: 10;
+    -fx-border-color: #444444;
+    -fx-border-radius: 10;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 10, 0, 0, 5);
+}
+
+.combo-box-moderno .list-cell {
+    -fx-padding: 8 15 8 15;
+    -fx-background-color: transparent;
+    -fx-text-fill: #e0e0e0;
+}
+
+.combo-box-moderno .list-cell:hover {
+    -fx-background-color: #333333;
+    -fx-text-fill: #4a90e2;
+}
+
+.combo-box-moderno .list-cell:selected {
+    -fx-background-color: #4a90e2;
+    -fx-text-fill: white;
+}
+/*combobox*/
+
+
+/*tabla*/
+.tabla-moderna {
+    -fx-background-color: transparent;
+    -fx-background-radius: 10;
+    -fx-border-color: #dcdcdc;
+    -fx-border-radius: 10;
+    -fx-padding: 0;
+}
+
+/* Estilo del encabezado (las columnas arriba) */
+.tabla-moderna .column-header-background {
+    -fx-background-color: #2a2a2a;
+    -fx-background-radius: 10 10 0 0;
+    -fx-border-color: transparent transparent #444444 transparent;
+}
+
+.tabla-moderna .column-header {
+    -fx-background-color: transparent;
+    -fx-size: 40;
+}
+
+.tabla-moderna .column-header .label {
+    -fx-text-fill: #e0e0e0;
+    -fx-font-weight: bold;
+    -fx-font-size: 13px;
+    -fx-alignment: CENTER_LEFT;
+}
+
+.tabla-moderna .table-row-cell {
+    -fx-background-color: #1e1e1e;
+    -fx-border-color: transparent transparent #2a2a2a transparent;
+    -fx-cell-size: 35;
+}
+
+.tabla-moderna .table-row-cell:odd {
+    -fx-background-color: #252525;
+}
+
+.tabla-moderna .table-row-cell:hover {
+    -fx-background-color: #333333;
+}
+
+.tabla-moderna .table-row-cell:selected {
+    -fx-background-color: #4a90e2;
+}
+
+.tabla-moderna .table-cell {
+    -fx-text-fill: #e0e0e0;
+}
+
+.tabla-moderna .table-row-cell:selected .table-cell {
+    -fx-text-fill: white;
+}
+
+/* Eliminar el cuadro vacío que sobra a la derecha si hay pocas columnas */
+.tabla-moderna .filler {
+    -fx-background-color: transparent;
+}
+
+/* Estilizar la barra de desplazamiento (Scrollbar) */
+.tabla-moderna .scroll-bar:vertical {
+    -fx-background-color: transparent;
+    -fx-pref-width: 8;
+}
+
+.tabla-moderna .scroll-bar:vertical .thumb {
+    -fx-background-color: #cdcdcd;
+    -fx-background-radius: 10;
+}
