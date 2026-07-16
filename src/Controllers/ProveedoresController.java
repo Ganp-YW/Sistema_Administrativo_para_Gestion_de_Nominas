@@ -71,11 +71,14 @@ public class ProveedoresController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // Inicializar ComboBoxes
-        providerPayType.setItems(FXCollections.observableArrayList("Efectivo", "Transferencia", "Pago Mvil"));
-        
-        javafx.collections.ObservableList<Models.Producto> productosProv = javafx.collections.FXCollections.observableArrayList();
+        providerPayType.setItems(FXCollections.observableArrayList("Efectivo", "Transferencia", "Pago Movil", "Divisas",
+                "Cheque", "Crédito", "Otro"));
+
+        javafx.collections.ObservableList<Models.Producto> productosProv = javafx.collections.FXCollections
+                .observableArrayList();
         Models.Producto.fillInventoryList(productosProv);
-        javafx.collections.ObservableList<String> nombresProductosProv = javafx.collections.FXCollections.observableArrayList();
+        javafx.collections.ObservableList<String> nombresProductosProv = javafx.collections.FXCollections
+                .observableArrayList();
         for (Models.Producto p : productosProv) {
             nombresProductosProv.add(p.getNombre());
         }
@@ -124,20 +127,21 @@ public class ProveedoresController implements Initializable {
 
         Proveedor nuevoProveedor = new Proveedor(currentProviderId, nom, ced, tel, rif, emp, tipoCob, invPref, "", "");
         ProveedorDAO dao = new ProveedorDAO();
-        
+
         boolean res = false;
         if (currentProviderId == 0) {
             res = dao.guardar(nuevoProveedor);
         } else {
             res = dao.modificar(nuevoProveedor);
         }
-        
+
         if (res) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Proveedor procesado");
-            alert.setContentText(currentProviderId == 0 ? "¡Se ha registrado el proveedor exitosamente!" : "¡Se ha actualizado el proveedor exitosamente!");
+            alert.setContentText(currentProviderId == 0 ? "¡Se ha registrado el proveedor exitosamente!"
+                    : "¡Se ha actualizado el proveedor exitosamente!");
             alert.showAndWait();
-            
+
             // Limpiar las cajas de texto
             providerName.clear();
             providerCI.clear();
@@ -146,11 +150,11 @@ public class ProveedoresController implements Initializable {
             providerBusiness.clear();
             providerPayType.setValue(null);
             providerPrefItem.setValue(null);
-            
+
             currentProviderId = 0;
             saveButton.setText("Guardar");
             ProviderTable.getSelectionModel().clearSelection();
-            
+
             // Actualizar la tabla
             providerList.clear();
             Proveedor.fillProviderList(providerList);
@@ -187,11 +191,11 @@ public class ProveedoresController implements Initializable {
                 finalMessage.setTitle("Proveedor Eliminado");
                 finalMessage.setContentText("¡Se ha Eliminado el proveedor exitosamente!");
                 finalMessage.showAndWait();
-                
+
                 // Actualizar tabla
                 providerList.clear();
                 Proveedor.fillProviderList(providerList);
-                
+
                 // Limpiar formulario si el proveedor borrado estaba seleccionado en el form
                 if (currentProviderId == selected.getId()) {
                     providerName.clear();
