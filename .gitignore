@@ -1,0 +1,12 @@
+# Compilados de Java y NetBeans
+build/
+dist/
+nbproject/private/
+*.class
+
+# Base de datos local
+database_data/
+
+# Archivos de SO
+.DS_Store
+Thumbs.db
