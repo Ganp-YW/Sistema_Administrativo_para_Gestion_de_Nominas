@@ -3,10 +3,12 @@ package controllers;
 import Dao.InventarioDAO;
 import Models.Producto;
 import java.net.URL;
+import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
@@ -17,6 +19,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.VBox;
 
 public class InventoryController implements Initializable {
 
@@ -39,6 +42,24 @@ public class InventoryController implements Initializable {
     TextField invPrice;
 
     @FXML
+    TextField searchField;
+
+    @FXML
+    Button toggleAdvancedButton;
+    @FXML
+    VBox advancedFilterPanel;
+    @FXML
+    ComboBox<String> filterCategory;
+    @FXML
+    TextField filterQuantityMin;
+    @FXML
+    TextField filterQuantityMax;
+    @FXML
+    TextField filterPriceMin;
+    @FXML
+    TextField filterPriceMax;
+
+    @FXML
     TableView<Producto> InventoryTable;
     @FXML
     TableColumn<Producto, Integer> ColId;
@@ -56,6 +77,7 @@ public class InventoryController implements Initializable {
     TableColumn<Producto, String> ColDate;
 
     ObservableList<Producto> productList = FXCollections.observableArrayList();
+    private FilteredList<Producto> filteredProductList;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -85,7 +107,95 @@ public class InventoryController implements Initializable {
         });
 
         productList = Producto.fillInventoryList(productList);
-        InventoryTable.setItems(productList);
+
+        filteredProductList = new FilteredList<>(productList, p -> true);
+        InventoryTable.setItems(filteredProductList);
+
+        // Poblar el ComboBox de categorías con los valores ya existentes en la BD (editable: se puede escribir una nueva)
+        InventarioDAO filterDao = new InventarioDAO();
+        List<String> categoriasExistentes = filterDao.obtenerCategoriasUnicas();
+        filterCategory.setItems(FXCollections.observableArrayList(categoriasExistentes));
+
+        // Live search + filtro avanzado en tiempo real
+        searchField.textProperty().addListener((obs, oldValue, newValue) -> aplicarFiltros());
+        filterCategory.valueProperty().addListener((obs, oldValue, newValue) -> aplicarFiltros());
+        filterQuantityMin.textProperty().addListener((obs, oldValue, newValue) -> aplicarFiltros());
+        filterQuantityMax.textProperty().addListener((obs, oldValue, newValue) -> aplicarFiltros());
+        filterPriceMin.textProperty().addListener((obs, oldValue, newValue) -> aplicarFiltros());
+        filterPriceMax.textProperty().addListener((obs, oldValue, newValue) -> aplicarFiltros());
+    }
+
+    @FXML
+    private void toggleFiltrosAvanzados() {
+        boolean mostrar = !advancedFilterPanel.isVisible();
+        advancedFilterPanel.setVisible(mostrar);
+        advancedFilterPanel.setManaged(mostrar);
+        toggleAdvancedButton.setText(mostrar ? "Filtros avanzados ▴" : "Filtros avanzados ▾");
+    }
+
+    @FXML
+    private void limpiarFiltrosAvanzados() {
+        filterCategory.setValue(null);
+        filterQuantityMin.clear();
+        filterQuantityMax.clear();
+        filterPriceMin.clear();
+        filterPriceMax.clear();
+    }
+
+    // Mantiene el comportamiento del botón "Buscar" por si el equipo prefiere no depender solo del live search.
+    @FXML
+    private void buscarProducto() {
+        aplicarFiltros();
+    }
+
+    // Combina texto libre + categoría + rango de cantidad + rango de precio en UN SOLO predicado.
+    private void aplicarFiltros() {
+        String textoFiltro = searchField.getText();
+        String textoLower = (textoFiltro == null) ? "" : textoFiltro.trim().toLowerCase();
+
+        String categoriaFiltro = filterCategory.getValue();
+        String categoriaLower = (categoriaFiltro == null) ? "" : categoriaFiltro.trim().toLowerCase();
+
+        Double cantidadMin = parseNumeroSeguro(filterQuantityMin.getText());
+        Double cantidadMax = parseNumeroSeguro(filterQuantityMax.getText());
+        Double precioMin = parseNumeroSeguro(filterPriceMin.getText());
+        Double precioMax = parseNumeroSeguro(filterPriceMax.getText());
+
+        filteredProductList.setPredicate(producto -> {
+            // Criterio 1: código o nombre (texto libre)
+            boolean coincideTexto = textoLower.isEmpty()
+                    || (producto.getCodigo() != null && producto.getCodigo().toLowerCase().contains(textoLower))
+                    || (producto.getNombre() != null && producto.getNombre().toLowerCase().contains(textoLower));
+
+            // Criterio 2: categoría
+            boolean coincideCategoria = categoriaLower.isEmpty()
+                    || (producto.getCategoria() != null && producto.getCategoria().toLowerCase().contains(categoriaLower));
+
+            // Criterio 3: rango de cantidad
+            int cantidadProducto = producto.getCantidad();
+            boolean coincideCantidadMin = (cantidadMin == null) || cantidadProducto >= cantidadMin;
+            boolean coincideCantidadMax = (cantidadMax == null) || cantidadProducto <= cantidadMax;
+
+            // Criterio 4: rango de precio
+            double precioProducto = producto.getPrecioUnitario();
+            boolean coincidePrecioMin = (precioMin == null) || precioProducto >= precioMin;
+            boolean coincidePrecioMax = (precioMax == null) || precioProducto <= precioMax;
+
+            return coincideTexto && coincideCategoria && coincideCantidadMin && coincideCantidadMax
+                    && coincidePrecioMin && coincidePrecioMax;
+        });
+    }
+
+    // Si el usuario escribe algo no numérico en los campos de rango, se ignora ese criterio (no rompe el filtro).
+    private Double parseNumeroSeguro(String texto) {
+        if (texto == null || texto.trim().isEmpty()) {
+            return null;
+        }
+        try {
+            return Double.parseDouble(texto.trim());
+        } catch (NumberFormatException e) {
+            return null;
+        }
     }
 
     @FXML
@@ -139,6 +249,10 @@ public class InventoryController implements Initializable {
             productList.clear();
             Producto.fillInventoryList(productList);
             ViewManager.clearCache();
+
+            // Refrescar el ComboBox de categorías por si se guardó una categoría nueva
+            InventarioDAO categoriaDao = new InventarioDAO();
+            filterCategory.setItems(FXCollections.observableArrayList(categoriaDao.obtenerCategoriasUnicas()));
         } else {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error");

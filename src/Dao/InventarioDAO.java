@@ -3,9 +3,29 @@ package Dao;
 import Config.DBConn;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 import Models.Producto;
 
 public class InventarioDAO {
+
+    // Devuelve las categorías ya usadas (sin repetir), para poblar el ComboBox del filtro avanzado.
+    public List<String> obtenerCategoriasUnicas() {
+        List<String> categorias = new ArrayList<>();
+        String sql = "SELECT DISTINCT categoria FROM inventario WHERE categoria IS NOT NULL ORDER BY categoria";
+        try (Connection conn = DBConn.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql);
+             ResultSet rs = pstmt.executeQuery()) {
+            while (rs.next()) {
+                categorias.add(rs.getString("categoria"));
+            }
+        } catch (Exception e) {
+            System.err.println("Error al obtener categorías únicas: " + e.getMessage());
+        }
+        return categorias;
+    }
+
     public boolean guardar(Producto producto) {
         String sql = "INSERT INTO inventario (codigo, nombre, categoria, cantidad, precio_unitario) VALUES (?, ?, ?, ?, ?)";
         try (Connection conn = DBConn.getConnection();

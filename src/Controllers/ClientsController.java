@@ -15,10 +15,12 @@ import Models.Client;
 import Dao.ClienteDAO;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.VBox;
 
 /**
  *
@@ -49,6 +51,15 @@ public class ClientsController {
     @FXML
     ComboBox<String> clientPrefItem;
 
+    @FXML
+    TextField searchField;
+    @FXML
+    Button toggleAdvancedButton;
+    @FXML
+    VBox advancedFilterPanel;
+    @FXML
+    ComboBox<String> filterPayType;
+
     // Table
     @FXML
     private TableView<Client> ClientTable;
@@ -74,11 +85,12 @@ public class ClientsController {
     private TableColumn<Client, String> ColAddedDate;
     @FXML
     private ObservableList<Client> clientList = FXCollections.observableArrayList();
+    private FilteredList<Client> filteredClientList;
 
     @FXML
     public void initialize() {
         // Cargar datos para los select (ComboBox)
-        clientPayType.setItems(FXCollections.observableArrayList("Efectivo", "Transferencia", "Pago Mvil", "CrǸdito"));
+        clientPayType.setItems(FXCollections.observableArrayList("Efectivo", "Transferencia", "Pago Movil", "Crédito"));
         
         javafx.collections.ObservableList<Models.Producto> productos = javafx.collections.FXCollections.observableArrayList();
         Models.Producto.fillInventoryList(productos);
@@ -116,7 +128,53 @@ public class ClientsController {
 
         clientList = Client.fillClientList(clientList);
 
-        ClientTable.setItems(clientList);
+        filteredClientList = new FilteredList<>(clientList, p -> true);
+        ClientTable.setItems(filteredClientList);
+
+        // Reutilizamos el mismo set de opciones que el formulario, ya que tipo de cobranza es un catálogo cerrado
+        filterPayType.setItems(FXCollections.observableArrayList("Efectivo", "Transferencia", "Pago Móvil", "Crédito"));
+
+        // Live search + filtro avanzado en tiempo real
+        searchField.textProperty().addListener((obs, oldValue, newValue) -> aplicarFiltros());
+        filterPayType.valueProperty().addListener((obs, oldValue, newValue) -> aplicarFiltros());
+    }
+
+    @FXML
+    private void toggleFiltrosAvanzados() {
+        boolean mostrar = !advancedFilterPanel.isVisible();
+        advancedFilterPanel.setVisible(mostrar);
+        advancedFilterPanel.setManaged(mostrar);
+        toggleAdvancedButton.setText(mostrar ? "Filtros avanzados ▴" : "Filtros avanzados ▾");
+    }
+
+    @FXML
+    private void limpiarFiltrosAvanzados() {
+        filterPayType.setValue(null);
+    }
+
+    // Mantiene el botón "Buscar" por compatibilidad, aunque el live search ya cubre el mismo trabajo.
+    @FXML
+    private void buscarCliente() {
+        aplicarFiltros();
+    }
+
+    // Combina texto libre (nombre/cédula) + tipo de cobranza en un solo predicado.
+    private void aplicarFiltros() {
+        String textoFiltro = searchField.getText();
+        String textoLower = (textoFiltro == null) ? "" : textoFiltro.trim().toLowerCase();
+
+        String tipoCobranzaFiltro = filterPayType.getValue();
+
+        filteredClientList.setPredicate(cliente -> {
+            boolean coincideTexto = textoLower.isEmpty()
+                    || (cliente.getName() != null && cliente.getName().toLowerCase().contains(textoLower))
+                    || (cliente.getDocument() != null && cliente.getDocument().toLowerCase().contains(textoLower));
+
+            boolean coincideCobranza = (tipoCobranzaFiltro == null)
+                    || tipoCobranzaFiltro.equals(cliente.getTypeCharge());
+
+            return coincideTexto && coincideCobranza;
+        });
     }
 
     @FXML

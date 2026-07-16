@@ -3,9 +3,29 @@ package Dao;
 import Config.DBConn;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 import Models.Empleado;
 
 public class EmpleadoDAO {
+
+    // Devuelve la lista de cargos ya usados (sin repetir), para poblar el ComboBox del filtro avanzado.
+    public List<String> obtenerCargosUnicos() {
+        List<String> cargos = new ArrayList<>();
+        String sql = "SELECT DISTINCT cargo FROM empleados WHERE cargo IS NOT NULL ORDER BY cargo";
+        try (Connection conn = DBConn.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql);
+             ResultSet rs = pstmt.executeQuery()) {
+            while (rs.next()) {
+                cargos.add(rs.getString("cargo"));
+            }
+        } catch (Exception e) {
+            System.err.println("Error al obtener cargos únicos: " + e.getMessage());
+        }
+        return cargos;
+    }
+
     public boolean guardar(Empleado empleado) {
         String sql = "INSERT INTO empleados (nombre, cedula, telefono, cargo, salario_base) VALUES (?, ?, ?, ?, ?)";
         try (Connection conn = DBConn.getConnection();
@@ -42,7 +62,7 @@ public class EmpleadoDAO {
             return false;
         }
     }
-    
+
     public boolean eliminar(int id) {
         String sql = "DELETE FROM empleados WHERE id=?";
         try (Connection conn = DBConn.getConnection();

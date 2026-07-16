@@ -3,19 +3,23 @@ package controllers;
 import Dao.EmpleadoDAO;
 import Models.Empleado;
 import java.net.URL;
+import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.VBox;
 
 public class EmployeesController implements Initializable {
 
@@ -38,6 +42,20 @@ public class EmployeesController implements Initializable {
     TextField empSalary;
 
     @FXML
+    TextField searchField;
+
+    @FXML
+    Button toggleAdvancedButton;
+    @FXML
+    VBox advancedFilterPanel;
+    @FXML
+    ComboBox<String> filterCargo;
+    @FXML
+    TextField filterSalaryMin;
+    @FXML
+    TextField filterSalaryMax;
+
+    @FXML
     TableView<Empleado> EmployeeTable;
     @FXML
     TableColumn<Empleado, Integer> ColId;
@@ -55,6 +73,7 @@ public class EmployeesController implements Initializable {
     TableColumn<Empleado, String> ColDate;
 
     ObservableList<Empleado> employeeList = FXCollections.observableArrayList();
+    private FilteredList<Empleado> filteredEmployeeList;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -81,7 +100,87 @@ public class EmployeesController implements Initializable {
         });
 
         employeeList = Empleado.fillEmployeeList(employeeList);
-        EmployeeTable.setItems(employeeList);
+
+        filteredEmployeeList = new FilteredList<>(employeeList, p -> true);
+        EmployeeTable.setItems(filteredEmployeeList);
+
+        // Poblar el ComboBox de cargos con los valores ya existentes en la BD.
+        // Es editable, así que el usuario puede escribir un cargo nuevo aunque no esté en la lista.
+        EmpleadoDAO dao = new EmpleadoDAO();
+        List<String> cargosExistentes = dao.obtenerCargosUnicos();
+        filterCargo.setItems(FXCollections.observableArrayList(cargosExistentes));
+
+        // Live search: el filtro se aplica en tiempo real mientras se escribe, sin necesidad del botón.
+        searchField.textProperty().addListener((obs, oldValue, newValue) -> aplicarFiltros());
+        filterCargo.valueProperty().addListener((obs, oldValue, newValue) -> aplicarFiltros());
+        filterSalaryMin.textProperty().addListener((obs, oldValue, newValue) -> aplicarFiltros());
+        filterSalaryMax.textProperty().addListener((obs, oldValue, newValue) -> aplicarFiltros());
+    }
+
+    @FXML
+    private void toggleFiltrosAvanzados() {
+        boolean mostrar = !advancedFilterPanel.isVisible();
+        advancedFilterPanel.setVisible(mostrar);
+        advancedFilterPanel.setManaged(mostrar);
+        toggleAdvancedButton.setText(mostrar ? "Filtros avanzados ▴" : "Filtros avanzados ▾");
+    }
+
+    @FXML
+    private void limpiarFiltrosAvanzados() {
+        filterCargo.setValue(null);
+        filterSalaryMin.clear();
+        filterSalaryMax.clear();
+        // Los listeners ya disparan aplicarFiltros() automáticamente al limpiar cada campo.
+    }
+
+    // Mantiene el comportamiento del botón "Buscar" por si el equipo prefiere no usar el live search.
+    @FXML
+    private void buscarEmpleado() {
+        aplicarFiltros();
+    }
+
+    // Construye UN SOLO predicado combinando todos los criterios activos (texto libre + cargo + rango de salario).
+    // Esto es clave: FilteredList solo acepta un predicado a la vez, así que cada criterio se combina con AND.
+    private void aplicarFiltros() {
+        String textoFiltro = searchField.getText();
+        String textoLower = (textoFiltro == null) ? "" : textoFiltro.trim().toLowerCase();
+
+        String cargoFiltro = filterCargo.getValue();
+        String cargoLower = (cargoFiltro == null) ? "" : cargoFiltro.trim().toLowerCase();
+
+        Double salarioMin = parseSalarioSeguro(filterSalaryMin.getText());
+        Double salarioMax = parseSalarioSeguro(filterSalaryMax.getText());
+
+        filteredEmployeeList.setPredicate(empleado -> {
+            // Criterio 1: nombre o cédula (texto libre)
+            boolean coincideTexto = textoLower.isEmpty()
+                    || (empleado.getNombre() != null && empleado.getNombre().toLowerCase().contains(textoLower))
+                    || (empleado.getCedula() != null && empleado.getCedula().toLowerCase().contains(textoLower));
+
+            // Criterio 2: cargo (coincidencia parcial, para permitir escribir un cargo nuevo o parcial)
+            boolean coincideCargo = cargoLower.isEmpty()
+                    || (empleado.getCargo() != null && empleado.getCargo().toLowerCase().contains(cargoLower));
+
+            // Criterio 3: rango de salario
+            double salarioEmpleado = empleado.getSalario();
+            boolean coincideMin = (salarioMin == null) || salarioEmpleado >= salarioMin;
+            boolean coincideMax = (salarioMax == null) || salarioEmpleado <= salarioMax;
+
+            return coincideTexto && coincideCargo && coincideMin && coincideMax;
+        });
+    }
+
+    // Si el usuario escribe algo que no es un número válido en los campos de salario, lo ignoramos
+    // en vez de tirar una excepción — así el filtro no se rompe mientras la persona sigue escribiendo.
+    private Double parseSalarioSeguro(String texto) {
+        if (texto == null || texto.trim().isEmpty()) {
+            return null;
+        }
+        try {
+            return Double.parseDouble(texto.trim());
+        } catch (NumberFormatException e) {
+            return null;
+        }
     }
 
     @FXML
@@ -132,6 +231,10 @@ public class EmployeesController implements Initializable {
             // Actualizar la tabla
             employeeList.clear();
             Empleado.fillEmployeeList(employeeList);
+
+            // Refrescar el ComboBox de cargos por si se guardó un cargo nuevo que no estaba antes
+            EmpleadoDAO cargoDao = new EmpleadoDAO();
+            filterCargo.setItems(FXCollections.observableArrayList(cargoDao.obtenerCargosUnicos()));
         } else {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error");

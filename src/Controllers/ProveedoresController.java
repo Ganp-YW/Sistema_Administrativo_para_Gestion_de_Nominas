@@ -7,6 +7,7 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
@@ -17,6 +18,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.VBox;
 
 public class ProveedoresController implements Initializable {
 
@@ -44,6 +46,15 @@ public class ProveedoresController implements Initializable {
     ComboBox<String> providerPrefItem;
 
     @FXML
+    TextField searchField;
+    @FXML
+    Button toggleAdvancedButton;
+    @FXML
+    VBox advancedFilterPanel;
+    @FXML
+    ComboBox<String> filterPayType;
+
+    @FXML
     TableView<Proveedor> ProviderTable;
     @FXML
     TableColumn<Proveedor, Integer> ColId;
@@ -67,6 +78,7 @@ public class ProveedoresController implements Initializable {
     TableColumn<Proveedor, String> ColAddedDate;
 
     ObservableList<Proveedor> providerList = FXCollections.observableArrayList();
+    private FilteredList<Proveedor> filteredProviderList;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -109,7 +121,54 @@ public class ProveedoresController implements Initializable {
         });
 
         providerList = Proveedor.fillProviderList(providerList);
-        ProviderTable.setItems(providerList);
+
+        filteredProviderList = new FilteredList<>(providerList, p -> true);
+        ProviderTable.setItems(filteredProviderList);
+
+        // Mismo catálogo cerrado que usa el formulario de Proveedores (sin "Crédito", a diferencia de Clientes)
+        filterPayType.setItems(FXCollections.observableArrayList("Efectivo", "Transferencia", "Pago Mvil"));
+
+        // Live search + filtro avanzado en tiempo real
+        searchField.textProperty().addListener((obs, oldValue, newValue) -> aplicarFiltros());
+        filterPayType.valueProperty().addListener((obs, oldValue, newValue) -> aplicarFiltros());
+    }
+
+    @FXML
+    private void toggleFiltrosAvanzados() {
+        boolean mostrar = !advancedFilterPanel.isVisible();
+        advancedFilterPanel.setVisible(mostrar);
+        advancedFilterPanel.setManaged(mostrar);
+        toggleAdvancedButton.setText(mostrar ? "Filtros avanzados ▴" : "Filtros avanzados ▾");
+    }
+
+    @FXML
+    private void limpiarFiltrosAvanzados() {
+        filterPayType.setValue(null);
+    }
+
+    // Mantiene el botón "Buscar" por compatibilidad, aunque el live search ya cubre el mismo trabajo.
+    @FXML
+    private void buscarProveedor() {
+        aplicarFiltros();
+    }
+
+    // Combina texto libre (nombre/cédula) + tipo de cobranza en un solo predicado.
+    private void aplicarFiltros() {
+        String textoFiltro = searchField.getText();
+        String textoLower = (textoFiltro == null) ? "" : textoFiltro.trim().toLowerCase();
+
+        String tipoCobranzaFiltro = filterPayType.getValue();
+
+        filteredProviderList.setPredicate(proveedor -> {
+            boolean coincideTexto = textoLower.isEmpty()
+                    || (proveedor.getName() != null && proveedor.getName().toLowerCase().contains(textoLower))
+                    || (proveedor.getDocument() != null && proveedor.getDocument().toLowerCase().contains(textoLower));
+
+            boolean coincideCobranza = (tipoCobranzaFiltro == null)
+                    || tipoCobranzaFiltro.equals(proveedor.getTypeCharge());
+
+            return coincideTexto && coincideCobranza;
+        });
     }
 
     @FXML

@@ -49,8 +49,8 @@
         <VBox spacing="15.0" style="-fx-background-color: #121212; -fx-padding: 20;" HBox.hgrow="ALWAYS">
             
             <HBox alignment="CENTER_LEFT" spacing="10.0">
-                <TextField prefHeight="36.0" promptText="Buscar producto por código o nombre..." styleClass="buscar-field" HBox.hgrow="ALWAYS" />
-                <Button prefHeight="36.0" prefWidth="120.0" text="Buscar">
+                <TextField fx:id="searchField" prefHeight="36.0" promptText="Buscar producto por código o nombre..." styleClass="buscar-field" HBox.hgrow="ALWAYS" />
+                <Button fx:id="searchButton" prefHeight="36.0" prefWidth="120.0" text="Buscar" onAction="#buscarProducto">
                     <graphic>
                         <ImageView fitHeight="18.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
                             <image>
@@ -59,7 +59,34 @@
                         </ImageView>
                     </graphic>
                 </Button>
+                <Button fx:id="toggleAdvancedButton" prefHeight="36.0" text="Filtros avanzados ▾" onAction="#toggleFiltrosAvanzados" style="-fx-background-color: #2a2a2a; -fx-text-fill: #e0e0e0;" />
             </HBox>
+
+            <VBox fx:id="advancedFilterPanel" spacing="10.0" managed="false" visible="false" style="-fx-background-color: #1e1e1e; -fx-padding: 15; -fx-background-radius: 6;">
+                <HBox spacing="15.0" alignment="CENTER_LEFT">
+                    <VBox spacing="4.0">
+                        <Label text="Categoría" style="-fx-font-size: 11px; -fx-text-fill: #a0a0a0;" />
+                        <ComboBox fx:id="filterCategory" editable="true" promptText="Todas" prefWidth="180.0" />
+                    </VBox>
+                    <VBox spacing="4.0">
+                        <Label text="Cantidad mínima" style="-fx-font-size: 11px; -fx-text-fill: #a0a0a0;" />
+                        <TextField fx:id="filterQuantityMin" promptText="Ej. 0" prefWidth="110.0" styleClass="buscar-field" />
+                    </VBox>
+                    <VBox spacing="4.0">
+                        <Label text="Cantidad máxima" style="-fx-font-size: 11px; -fx-text-fill: #a0a0a0;" />
+                        <TextField fx:id="filterQuantityMax" promptText="Ej. 500" prefWidth="110.0" styleClass="buscar-field" />
+                    </VBox>
+                    <VBox spacing="4.0">
+                        <Label text="Precio mínimo" style="-fx-font-size: 11px; -fx-text-fill: #a0a0a0;" />
+                        <TextField fx:id="filterPriceMin" promptText="Ej. 1.00" prefWidth="110.0" styleClass="buscar-field" />
+                    </VBox>
+                    <VBox spacing="4.0">
+                        <Label text="Precio máximo" style="-fx-font-size: 11px; -fx-text-fill: #a0a0a0;" />
+                        <TextField fx:id="filterPriceMax" promptText="Ej. 100.00" prefWidth="110.0" styleClass="buscar-field" />
+                    </VBox>
+                    <Button fx:id="clearFiltersButton" text="Limpiar filtros" onAction="#limpiarFiltrosAvanzados" style="-fx-background-color: #3a3a3a; -fx-text-fill: #e0e0e0;" />
+                </HBox>
+            </VBox>
             
             <TableView fx:id="InventoryTable" styleClass="tabla-moderna" VBox.vgrow="ALWAYS">
                 <columns>
