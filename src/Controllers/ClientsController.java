@@ -90,16 +90,20 @@ public class ClientsController {
     @FXML
     public void initialize() {
         // Cargar datos para los select (ComboBox)
-        clientPayType.setItems(FXCollections.observableArrayList("Efectivo", "Transferencia", "Pago Movil", "Crédito"));
-        
-        javafx.collections.ObservableList<Models.Producto> productos = javafx.collections.FXCollections.observableArrayList();
+        clientPayType.setItems(
+                FXCollections.observableArrayList("Efectivo", "Transferencia", "Pago Movil", "Crédito", "Divisas",
+                        "Cheque", "Otro"));
+
+        javafx.collections.ObservableList<Models.Producto> productos = javafx.collections.FXCollections
+                .observableArrayList();
         Models.Producto.fillInventoryList(productos);
-        javafx.collections.ObservableList<String> nombresProductos = javafx.collections.FXCollections.observableArrayList();
+        javafx.collections.ObservableList<String> nombresProductos = javafx.collections.FXCollections
+                .observableArrayList();
         for (Models.Producto p : productos) {
             nombresProductos.add(p.getNombre());
         }
         clientPrefItem.setItems(nombresProductos);
-        
+
         ColId.setCellValueFactory(new PropertyValueFactory<>("id"));
         ColName.setCellValueFactory(new PropertyValueFactory<>("name"));
         ColCI.setCellValueFactory(new PropertyValueFactory<>("document")); // Atributo se llama document
@@ -191,22 +195,23 @@ public class ClientsController {
         Client nuevoCliente = new Client(currentClientId, nom, ced, tel, rif, emp, tipoCob, invPref, "", "");
         // 3. Pasarlo al DAO para que haga la magia SQL
         ClienteDAO dao = new ClienteDAO();
-        
+
         boolean res = false;
         if (currentClientId == 0) {
             res = dao.guardar(nuevoCliente);
         } else {
             res = dao.modificar(nuevoCliente);
         }
-        
+
         if (res) {
             System.out.println("¡Cliente procesado correctamente!");
-            
+
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Cliente procesado");
-            alert.setContentText(currentClientId == 0 ? "¡Se ha registrado el cliente exitosamente!" : "¡Se ha actualizado el cliente exitosamente!");
+            alert.setContentText(currentClientId == 0 ? "¡Se ha registrado el cliente exitosamente!"
+                    : "¡Se ha actualizado el cliente exitosamente!");
             alert.showAndWait();
-            
+
             // Limpiar las cajas de texto
             clientName.clear();
             clientCI.clear();
@@ -215,17 +220,17 @@ public class ClientsController {
             clientBusiness.clear();
             clientPayType.setValue(null);
             clientPrefItem.setValue(null);
-            
+
             currentClientId = 0;
             saveButton.setText("Guardar");
             ClientTable.getSelectionModel().clearSelection();
-            
+
             // Actualizar la tabla
             clientList.clear();
             Client.fillClientList(clientList);
         } else {
             System.out.println("Error guardando el cliente.");
-            
+
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error");
             alert.setContentText("Hubo un error al intentar guardar el cliente en la base de datos.");
@@ -258,11 +263,11 @@ public class ClientsController {
                 finalMessage.setTitle("Cliente Eliminado");
                 finalMessage.setContentText("¡Se ha Eliminado el cliente exitosamente!");
                 finalMessage.showAndWait();
-                
+
                 // Actualizar tabla
                 clientList.clear();
                 Client.fillClientList(clientList);
-                
+
                 // Limpiar formulario si el cliente borrado estaba seleccionado en el form
                 if (currentClientId == selected.getId()) {
                     clientName.clear();
