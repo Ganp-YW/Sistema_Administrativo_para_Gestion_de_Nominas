@@ -70,9 +70,16 @@ public class ProveedoresController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // Inicializar ComboBoxes (ejemplo de datos ficticios)
-        providerPayType.setItems(FXCollections.observableArrayList("Efectivo", "Transferencia", "Pago Móvil"));
-        providerPrefItem.setItems(FXCollections.observableArrayList("Viveres en General", "Carne", "Pollo", "Pasta", "Arroz"));
+        // Inicializar ComboBoxes
+        providerPayType.setItems(FXCollections.observableArrayList("Efectivo", "Transferencia", "Pago Mvil"));
+        
+        javafx.collections.ObservableList<Models.Producto> productosProv = javafx.collections.FXCollections.observableArrayList();
+        Models.Producto.fillInventoryList(productosProv);
+        javafx.collections.ObservableList<String> nombresProductosProv = javafx.collections.FXCollections.observableArrayList();
+        for (Models.Producto p : productosProv) {
+            nombresProductosProv.add(p.getNombre());
+        }
+        providerPrefItem.setItems(nombresProductosProv);
 
         // Inicializar Columnas
         ColId.setCellValueFactory(new PropertyValueFactory<>("id"));

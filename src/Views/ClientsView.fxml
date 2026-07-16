@@ -35,10 +35,10 @@
             <TextField fx:id="clientBusiness" promptText="Nombre de la empresa" styleClass="buscar-field" />
             
             <Label style="-fx-font-weight: bold; -fx-font-size: 12px; -fx-text-fill: #e0e0e0;" text="Tipo de Cobranza" />
-            <ComboBox fx:id="clientPayType" maxWidth="1.7976931348623157E308" promptText="Selecciona una opción" styleClass="list-view" />
+            <ComboBox fx:id="clientPayType" maxWidth="1.7976931348623157E308" promptText="Selecciona una opción" styleClass="combo-box-moderno" />
             
             <Label style="-fx-font-weight: bold; -fx-font-size: 12px; -fx-text-fill: #e0e0e0;" text="Inventario Preferido" />
-            <ComboBox fx:id="clientPrefItem" maxWidth="1.7976931348623157E308" promptText="Selecciona una opción" styleClass="list-view" />
+            <ComboBox fx:id="clientPrefItem" maxWidth="1.7976931348623157E308" promptText="Selecciona una opción" styleClass="combo-box-moderno" />
             
             <Separator style="-fx-padding: 5 0;" />
             

@@ -78,8 +78,15 @@ public class ClientsController {
     @FXML
     public void initialize() {
         // Cargar datos para los select (ComboBox)
-        clientPayType.setItems(FXCollections.observableArrayList("Efectivo", "Transferencia", "Pago Móvil", "Crédito"));
-        clientPrefItem.setItems(FXCollections.observableArrayList("Harina", "Arroz", "Pasta", "Azúcar", "Café", "Víveres en General"));
+        clientPayType.setItems(FXCollections.observableArrayList("Efectivo", "Transferencia", "Pago Mvil", "CrǸdito"));
+        
+        javafx.collections.ObservableList<Models.Producto> productos = javafx.collections.FXCollections.observableArrayList();
+        Models.Producto.fillInventoryList(productos);
+        javafx.collections.ObservableList<String> nombresProductos = javafx.collections.FXCollections.observableArrayList();
+        for (Models.Producto p : productos) {
+            nombresProductos.add(p.getNombre());
+        }
+        clientPrefItem.setItems(nombresProductos);
         
         ColId.setCellValueFactory(new PropertyValueFactory<>("id"));
         ColName.setCellValueFactory(new PropertyValueFactory<>("name"));

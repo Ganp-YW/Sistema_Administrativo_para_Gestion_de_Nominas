@@ -27,7 +27,7 @@
             <TextField fx:id="invName" promptText="Nombre del producto" styleClass="buscar-field" />
             
             <Label text="Categoría" style="-fx-font-weight: bold; -fx-font-size: 12px; -fx-text-fill: #e0e0e0;" />
-            <ComboBox fx:id="invCategory" maxWidth="1.7976931348623157E308" promptText="Selecciona categoría" styleClass="list-view" />
+            <ComboBox fx:id="invCategory" maxWidth="1.7976931348623157E308" promptText="Selecciona categoría" styleClass="combo-box-moderno" />
             
             <Label text="Cantidad" style="-fx-font-weight: bold; -fx-font-size: 12px; -fx-text-fill: #e0e0e0;" />
             <TextField fx:id="invQuantity" promptText="Ej. 100" styleClass="buscar-field" />

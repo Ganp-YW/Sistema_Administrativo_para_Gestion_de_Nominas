@@ -138,6 +138,7 @@ public class InventoryController implements Initializable {
             // Actualizar la tabla
             productList.clear();
             Producto.fillInventoryList(productList);
+            ViewManager.clearCache();
         } else {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error");
@@ -175,6 +176,7 @@ public class InventoryController implements Initializable {
                 // Actualizar tabla
                 productList.clear();
                 Producto.fillInventoryList(productList);
+                ViewManager.clearCache();
                 
                 // Limpiar formulario si el producto borrado estaba seleccionado
                 if (currentProductId == selected.getId()) {
