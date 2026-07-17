@@ -10,7 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import javafx.collections.ObservableList;
-import javax.swing.JOptionPane;
+
 
 /**
  *
@@ -29,6 +29,7 @@ public class Client {
     public String lastPurchase;
     public String addedDate;
 
+    // Constructor con parametros
     public Client(int id, String name, String document, String phoneNum, String rif, String empresa, String typeCharge,
             String preferedproducts, String lastPurchase, String addedDate) {
         this.id = id;
@@ -43,6 +44,7 @@ public class Client {
         this.addedDate = addedDate;
     }
 
+    // Constructor vacio
     public Client() {
     }
 
@@ -51,47 +53,38 @@ public class Client {
         this.id = id;
     }
 
-    // Metodo setName
     public void setName(String Name) {
         this.name = Name;
     }
 
-    // Metodo setDocument
     public void setDocument(String document) {
         this.document = document;
     }
 
-    // Metodo setPhoneNum
     public void setPhoneNum(String phoneNum) {
         this.phoneNum = phoneNum;
     }
 
-    // Metodo setRif
     public void setRif(String rif) {
         this.rif = rif;
     }
 
-    // Metodo setEmpresa
     public void setEmpresa(String empresa) {
         this.empresa = empresa;
     }
 
-    // Metodo setTypeCharge
     public void setTypeCharge(String typeCharge) {
         this.typeCharge = typeCharge;
     }
 
-    // Metodo setPreferedproducts
     public void setPreferedproducts(String preferedproducts) {
         this.preferedproducts = preferedproducts;
     }
 
-    // Metodo setLastPurchase
     private void setLastPurchase(String lastPurchase) {
         this.lastPurchase = lastPurchase;
     }
 
-    // Metodo setAddedDate
     private void setAddedDate(String addedDate) {
         this.addedDate = addedDate;
     }
@@ -101,52 +94,43 @@ public class Client {
         return id;
     }
 
-    // Metodo getName
     public String getName() {
         return name;
     }
 
-    // Metodo getRif
     public String getRif() {
         return rif;
     }
 
-    // Metodo getPhoneNum
     public String getPhoneNum() {
         return phoneNum;
     }
 
-    // Metodo getPreferedproducts
     public String getPreferedproducts() {
         return preferedproducts;
     }
 
-    // Metodo getEmpresa
     public String getEmpresa() {
         return empresa;
     }
 
-    // Metodo getDocument
     public String getDocument() {
         return document;
     }
 
-    // Metodo getTypeCharge
     public String getTypeCharge() {
         return typeCharge;
     }
 
-    // Metodo getLastPurchase
     public String getLastPurchase() {
         return lastPurchase;
     }
 
-    // Metodo getAddedDate
     public String getAddedDate() {
         return addedDate;
     }
 
-    // Metodo fillClientList
+    // Metodo para llenar la lista de clientes
     public static ObservableList<Client> fillClientList(ObservableList<Client> list) {
         try (Connection conn = DBConn.getConnection()) {
             Statement st = conn.createStatement();

@@ -4,20 +4,14 @@
  */
 package controllers;
 
-import Models.Client;
-import java.net.URL;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Optional;
-import java.util.ResourceBundle;
 
-import Models.Client;
 import Dao.ClienteDAO;
+import Models.Client;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
@@ -135,7 +129,8 @@ public class ClientsController {
         filteredClientList = new FilteredList<>(clientList, p -> true);
         ClientTable.setItems(filteredClientList);
 
-        // Reutilizamos el mismo set de opciones que el formulario, ya que tipo de cobranza es un catálogo cerrado
+        // Reutilizamos el mismo set de opciones que el formulario, ya que tipo de
+        // cobranza es un catálogo cerrado
         filterPayType.setItems(clientPayType.getItems());
 
         // Live search + filtro avanzado en tiempo real
@@ -156,7 +151,8 @@ public class ClientsController {
         filterPayType.setValue(null);
     }
 
-    // Mantiene el botón "Buscar" por compatibilidad, aunque el live search ya cubre el mismo trabajo.
+    // Mantiene el botón "Buscar" por compatibilidad, aunque el live search ya cubre
+    // el mismo trabajo.
     @FXML
     private void buscarCliente() {
         aplicarFiltros();

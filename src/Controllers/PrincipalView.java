@@ -5,12 +5,9 @@
 package controllers;
 
 import Config.DBConn;
-import java.io.IOException;
 import javafx.fxml.*;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
-import javafx.scene.*;
-import javafx.stage.*;
 import java.awt.Desktop;
 import java.net.URI;
 import javafx.event.ActionEvent;
@@ -24,7 +21,7 @@ import javafx.animation.Timeline;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
-import javafx.fxml.FXML;
+
 /**
  *
  * @author joseh
@@ -123,8 +120,7 @@ public class PrincipalView {
             final int valorActual = (int) ((double) valorFinal * i / pasos);
             KeyFrame keyFrame = new KeyFrame(
                     Duration.millis(i * intervalo),
-                    e -> label.setText(String.valueOf(valorActual))
-            );
+                    e -> label.setText(String.valueOf(valorActual)));
             timeline.getKeyFrames().add(keyFrame);
         }
         timeline.play();
@@ -208,7 +204,9 @@ public class PrincipalView {
         int total = 0;
         String sql = "SELECT COUNT(*) AS total FROM " + nombreTabla;
 
-        try (Connection conn = DBConn.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql); ResultSet rs = pstmt.executeQuery()) {
+        try (Connection conn = DBConn.getConnection();
+                PreparedStatement pstmt = conn.prepareStatement(sql);
+                ResultSet rs = pstmt.executeQuery()) {
             if (rs.next()) {
                 total = rs.getInt("total");
             }
@@ -224,9 +222,9 @@ public class PrincipalView {
         int totalClientes = contarRegistros("clientes");
         int totalProveedores = contarRegistros("proveedores");
 
-        //lblTotalEmpleados.setText(String.valueOf(totalEmpleados));
-        //lblTotalClientes.setText(String.valueOf(totalClientes));
-        //lblTotalProveedores.setText(String.valueOf(totalProveedores));
+        // lblTotalEmpleados.setText(String.valueOf(totalEmpleados));
+        // lblTotalClientes.setText(String.valueOf(totalClientes));
+        // lblTotalProveedores.setText(String.valueOf(totalProveedores));
         animarConteo(lblTotalEmpleados, totalEmpleados);
         animarConteo(lblTotalClientes, totalClientes);
         animarConteo(lblTotalProveedores, totalProveedores);
