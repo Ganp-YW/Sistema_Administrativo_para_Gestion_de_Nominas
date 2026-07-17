@@ -26,6 +26,7 @@ public class EmpleadoDAO {
         return cargos;
     }
 
+    // Metodo guardar
     public boolean guardar(Empleado empleado) {
         String sql = "INSERT INTO empleados (nombre, cedula, telefono, cargo, salario_base) VALUES (?, ?, ?, ?, ?)";
         try (Connection conn = DBConn.getConnection();
@@ -44,6 +45,7 @@ public class EmpleadoDAO {
         }
     }
 
+    // Metodo modificar
     public boolean modificar(Empleado empleado) {
         String sql = "UPDATE empleados SET nombre=?, cedula=?, telefono=?, cargo=?, salario_base=? WHERE id=?";
         try (Connection conn = DBConn.getConnection();
@@ -63,6 +65,7 @@ public class EmpleadoDAO {
         }
     }
 
+    // Metodo eliminar
     public boolean eliminar(int id) {
         String sql = "DELETE FROM empleados WHERE id=?";
         try (Connection conn = DBConn.getConnection();

@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import Models.Proveedor;
 
 public class ProveedorDAO {
+    // Metodo para guardar un proveedor
     public boolean guardar(Proveedor proveedor) {
         String sql = "INSERT INTO proveedores (nombre, cedula, telefono, rif, empresa, tipo_cobranza, inventario_preferido) VALUES (?, ?, ?, ?, ?, ?, ?)";
         try (Connection conn = DBConn.getConnection();
@@ -26,6 +27,7 @@ public class ProveedorDAO {
         }
     }
 
+    // Metodo para modificar un proveedor
     public boolean modificar(Proveedor proveedor) {
         String sql = "UPDATE proveedores SET nombre=?, cedula=?, telefono=?, rif=?, empresa=?, tipo_cobranza=?, inventario_preferido=? WHERE id=?";
         try (Connection conn = DBConn.getConnection();
@@ -47,6 +49,7 @@ public class ProveedorDAO {
         }
     }
 
+    // Metodo para eliminar un proveedor
     public boolean eliminar(int id) {
         String sql = "DELETE FROM proveedores WHERE id=?";
         try (Connection conn = DBConn.getConnection();

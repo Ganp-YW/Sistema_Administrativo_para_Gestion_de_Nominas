@@ -4,6 +4,7 @@ import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 
 public class CheckSchema {
+    // Metodo main
     public static void main(String[] args) {
         try (Connection conn = DBConn.getConnection()) {
             DatabaseMetaData metaData = conn.getMetaData();

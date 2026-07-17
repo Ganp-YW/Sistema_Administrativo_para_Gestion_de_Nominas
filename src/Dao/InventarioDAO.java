@@ -26,6 +26,7 @@ public class InventarioDAO {
         return categorias;
     }
 
+    // Metodo para guardar un producto
     public boolean guardar(Producto producto) {
         String sql = "INSERT INTO inventario (codigo, nombre, categoria, cantidad, precio_unitario) VALUES (?, ?, ?, ?, ?)";
         try (Connection conn = DBConn.getConnection();
@@ -44,6 +45,7 @@ public class InventarioDAO {
         }
     }
 
+    // Metodo para modificar un producto
     public boolean modificar(Producto producto) {
         String sql = "UPDATE inventario SET codigo=?, nombre=?, categoria=?, cantidad=?, precio_unitario=? WHERE id=?";
         try (Connection conn = DBConn.getConnection();
@@ -63,6 +65,7 @@ public class InventarioDAO {
         }
     }
 
+    // Metodo para eliminar un producto
     public boolean eliminar(int id) {
         String sql = "DELETE FROM inventario WHERE id=?";
         try (Connection conn = DBConn.getConnection();

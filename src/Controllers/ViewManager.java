@@ -31,6 +31,7 @@ public class ViewManager {
         container = principalContainer;
     }
 
+    // Metodo loadView
     public static void loadView(String viewName, double width, double height) {
         try {
             HBox view = getView(viewName);
@@ -68,6 +69,7 @@ public class ViewManager {
         return actualController;
     }
 
+    // Metodo clearCache
     public static void clearCache() {
         viewCache.clear();
     }

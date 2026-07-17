@@ -10,6 +10,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 
 public class ClienteDAO {
+    // Metodo guardar
     public boolean guardar(Client cliente) {
         String sql = "INSERT INTO clientes (nombre, cedula, telefono, rif, empresa, tipo_cobranza, inventario_preferido) VALUES (?, ?, ?, ?, ?, ?, ?)";
         try (Connection conn = DBConn.getConnection();
@@ -30,6 +31,7 @@ public class ClienteDAO {
         }
     }
 
+    // Metodo modificar
     public boolean modificar(Client cliente) {
         String sql = "UPDATE clientes SET nombre=?, cedula=?, telefono=?, rif=?, empresa=?, tipo_cobranza=?, inventario_preferido=? WHERE id=?";
         try (Connection conn = DBConn.getConnection();
@@ -51,6 +53,7 @@ public class ClienteDAO {
         }
     }
 
+    // Metodo eliminar
     public boolean eliminar(int id) {
         String sql = "DELETE FROM clientes WHERE id=?";
         try (Connection conn = DBConn.getConnection();

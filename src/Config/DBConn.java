@@ -27,6 +27,7 @@ public class DBConn {
     private static String USER = "postgres";
     private static String PASSWORD = "";
 
+    // Metodo para inicializar la configuracion de base de datos embebida
     private static void initDBConf() {
         try {
             System.out.println("Iniciando PostgreSQL Embebido...");
@@ -55,6 +56,7 @@ public class DBConn {
         }
     }
 
+    // Metodo para ejecutar el script de inicializacion SQL
     private static void executeInitSql() {
         try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
              Statement stmt = conn.createStatement()) {
@@ -72,6 +74,7 @@ public class DBConn {
         }
     }
 
+    // Metodo para obtener una conexion a la base de datos
     public static Connection getConnection() {
         if (!initialized) {
             initDBConf();
@@ -88,6 +91,7 @@ public class DBConn {
         return conn;
     }
 
+    // Metodo main para probar la conexion
     public static void main(String[] args) {
         System.out.println("Prueba de Conexion a Embedded PostgreSQL:");
 

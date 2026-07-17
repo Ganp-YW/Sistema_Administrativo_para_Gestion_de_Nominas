@@ -5,6 +5,7 @@ import java.sql.ResultSetMetaData;
 import java.sql.Statement;
 
 public class CheckDB {
+    // Metodo main
     public static void main(String[] args) {
         try (Connection conn = DBConn.getConnection()) {
             Statement st = conn.createStatement();

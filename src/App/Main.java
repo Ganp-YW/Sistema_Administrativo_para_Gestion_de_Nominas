@@ -16,6 +16,7 @@ import javafx.stage.Stage;
 
 public class Main extends Application {
 
+    // Metodo de inicializacion antes de cargar la interfaz
     @Override
     public void init() throws Exception {
         // Inicializar la base de datos (y descargar binarios si es necesario) 
@@ -24,6 +25,7 @@ public class Main extends Application {
         Config.DBConn.getConnection();
     }
 
+    // Metodo principal de inicio de JavaFX
     @Override
     public void start(Stage primaryStage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("/Views/PrincipalView.fxml"));
@@ -37,6 +39,7 @@ public class Main extends Application {
         primaryStage.show();
     }
 
+    // Metodo main para arrancar la aplicacion
     public static void main(String[] args) {
         launch(args);
     }

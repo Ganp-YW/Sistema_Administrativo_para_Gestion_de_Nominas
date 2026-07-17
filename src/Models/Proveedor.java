@@ -58,6 +58,7 @@ public class Proveedor {
     public String getAddedDate() { return addedDate; }
     public void setAddedDate(String addedDate) { this.addedDate = addedDate; }
 
+    // Metodo fillProviderList
     public static ObservableList<Proveedor> fillProviderList(ObservableList<Proveedor> lista) {
         String sql = "SELECT * FROM proveedores;";
         try (Connection conn = DBConn.getConnection();

@@ -22,6 +22,7 @@ public class Controller {
     @FXML
     private Button clientsTabButton;
     
+    // Metodo openClientsTab
     public void openClientsTab() throws IOException{
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Se ha pulsado el boton");
@@ -45,9 +46,10 @@ public class Controller {
          ((Stage) clientsTabButton.getScene().getWindow()).close();
     }
 
+    // Metodo initialize
     public void initialize() {
         String javaVersion = System.getProperty("java.version");
         String javafxVersion = System.getProperty("javafx.version");
         label.setText("Hello, JavaFX " + javafxVersion + "\nRunning on Java " + javaVersion + ".");
     }
-}
+    }

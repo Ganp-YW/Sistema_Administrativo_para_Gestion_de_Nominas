@@ -63,6 +63,7 @@ public class PrincipalView {
 
     }
 
+    // Metodo configurarEfectosHover
     private void configurarEfectosHover() {
         agregarEfectoZoom(cardProveedores);
         agregarEfectoZoom(cardEmpleados);
@@ -217,6 +218,7 @@ public class PrincipalView {
         return total;
     }
 
+    // Metodo cargarResumen
     public void cargarResumen() {
         int totalEmpleados = contarRegistros("empleados");
         int totalClientes = contarRegistros("clientes");

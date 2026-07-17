@@ -44,6 +44,7 @@ public class Producto {
     public String getFechaRegistro() { return fechaRegistro; }
     public void setFechaRegistro(String fechaRegistro) { this.fechaRegistro = fechaRegistro; }
 
+    // Metodo fillInventoryList
     public static ObservableList<Producto> fillInventoryList(ObservableList<Producto> lista) {
         String sql = "SELECT * FROM inventario;";
         try (Connection conn = DBConn.getConnection();
