@@ -1,0 +1,35 @@
+Guion Detallado para Presentación en Video (Máx 10 minutos)
+
+Introducción (0:00 - 1:00)
+Narrador/Presentador: "Hola a todos, el día de hoy les presentaremos el Sistema Administrativo para la Gestión de Nóminas e Inventario de 'Don Tomas'. Este proyecto es una aplicación de escritorio desarrollada completamente en el lenguaje Java, utilizando JavaFX para el diseño de la interfaz gráfica y una arquitectura fuertemente orientada a objetos basada en el patrón MVC (Modelo-Vista-Controlador). A continuación, desglosaremos la estructura técnica del software en tres partes fundamentales, explicando a detalle cómo las distintas piezas de código y bases de datos interactúan entre sí."
+
+1. Clases, atributos, métodos, herencias, polimorfismo, tipos de datos, arrays y listas (1:00 - 4:00)
+Narrador/Presentador: "Empezaremos hablando del núcleo de la lógica de negocio. En nuestro paquete 'Models', hemos abstraído los conceptos del mundo real en clases de Java. Contamos con las clases 'Client', 'Empleado', 'Producto' y 'Proveedor'.
+Cada clase funciona como un molde. Dentro de ellas declaramos distintos atributos utilizando tipos de datos primitivos como 'int' para los identificadores únicos (IDs), 'double' para manejar datos precisos de dinero (como salarios o precios unitarios), y tipos por referencia como 'String' para cadenas de texto (nombres, teléfonos, categorías).
+
+Para proteger la integridad de la información, aplicamos un estricto encapsulamiento (declarando las variables como privadas) y accedemos a ellas únicamente mediante métodos públicos 'getters' y 'setters'. Estos métodos nos permiten aplicar lógica de validación antes de asignar un valor a una variable.
+
+En cuanto a la herencia y el polimorfismo, la base de nuestra aplicación hace un uso intensivo de estos pilares. Por ejemplo, la clase 'Main' hereda (con la palabra reservada 'extends') de la clase 'Application' de JavaFX. Esto nos permite aplicar polimorfismo por sobrescritura o 'override', redefiniendo los métodos del ciclo de vida de la aplicación como 'init()' y 'start()' para adaptarlos a nuestras necesidades.
+
+Para el manejo de colecciones y múltiples registros, en lugar de utilizar arreglos o 'arrays' estáticos convencionales (que tienen un tamaño fijo), decidimos implementar listas dinámicas. Hacemos uso intensivo de la interfaz genérica de Java 'List' y, específicamente en la capa de vista, implementamos 'ObservableList' de JavaFX. Esta colección no solo almacena dinámicamente nuestros objetos en memoria (gestionando un array interno que crece automáticamente), sino que además notifica automáticamente a los componentes de la interfaz gráfica (como los TableView) cada vez que un elemento se agrega, se actualiza o se elimina, logrando una interfaz reactiva."
+
+2. Bases de datos de cada clase y conexiones (4:00 - 7:00)
+Narrador/Presentador: "Pasando a la persistencia de datos, el sistema no guarda la información en archivos de texto, sino que implementa un gestor de bases de datos relacional potente: PostgreSQL.
+Para que el usuario final no tenga que instalar ni configurar un servidor de base de datos externo, hemos utilizado 'Zonky Embedded Postgres'. Esto significa que el motor de base de datos se descarga, extrae y ejecuta automáticamente desde el propio código Java en tiempo real al abrir el programa. 
+
+La responsabilidad de encender el servidor y establecer la comunicación recae sobre la clase 'DBConn', garantizando el principio de responsabilidad única. 
+
+Para interactuar con las tablas (una por cada clase del modelo), adoptamos el patrón de diseño DAO o 'Data Access Object'. En el paquete 'Dao' creamos clases como 'ClienteDAO', 'EmpleadoDAO' e 'InventarioDAO'. El objetivo es mantener el código SQL totalmente separado de la interfaz de usuario.
+Cada clase DAO contiene métodos específicos para realizar operaciones CRUD (Create, Read, Update, Delete). Al hacer consultas a la base de datos, en lugar de concatenar texto plano, utilizamos la clase 'PreparedStatement' del paquete 'java.sql'. Esto es una medida de seguridad crítica para evitar vulnerabilidades como la 'Inyección SQL', permitiendo enviar los parámetros de forma segura y tipada hacia nuestra base de datos."
+
+3. Main, algoritmo principal y ejecución en tiempo real (7:00 - 9:30)
+Narrador/Presentador: "Finalmente, explicaremos el ciclo de ejecución en tiempo real, cuyo punto de entrada principal es la clase 'Main'. 
+Como mencionamos, al heredar de 'Application', el primer método que se dispara en el ciclo de vida de JavaFX es 'init()'. Aquí implementamos un algoritmo multihilos (Multithreading). Al encender la base de datos de PostgreSQL, el proceso puede tardar unos segundos. Si hiciéramos esto en el hilo principal (el JavaFX Application Thread), la aplicación se congelaría. Para solucionarlo, delegamos esta tarea a un hilo secundario usando la clase 'Task' y 'Thread'. 
+Una vez que la conexión es exitosa, se ejecuta el método 'start()', el cual dibuja la ventana y carga nuestro archivo principal de diseño ('PrincipalView.fxml') usando la clase 'FXMLLoader'.
+
+Durante la ejecución, la navegación entre pestañas es gestionada por nuestra clase 'ViewManager'. En lugar de abrir múltiples ventanas pesadas en el sistema operativo del usuario, el 'ViewManager' carga dinámicamente distintos archivos FXML (como la vista de Inventario o Proveedores) y los inyecta en el centro de la pantalla principal en milisegundos, ofreciendo una experiencia tipo 'Single Page Application' (SPA) dentro de un entorno de escritorio.
+
+Para la búsqueda en tiempo real (o 'Live Search'), implementamos un algoritmo utilizando 'FilteredList' en nuestros controladores. Al capturar el evento de texto en la barra de búsqueda, un 'Predicate' o función lambda evalúa cada objeto de la lista en memoria. Si el nombre o código del producto coincide con lo escrito, el objeto se mantiene en la vista; si no, se oculta. Todo esto sucede en milisegundos y sin hacer consultas innecesarias a la base de datos por cada letra presionada."
+
+Conclusión (9:30 - 10:00)
+Narrador/Presentador: "Como han podido observar, detrás de una interfaz de usuario minimalista y fácil de usar, existe una arquitectura de software compleja y altamente optimizada. El uso del patrón MVC, la programación orientada a objetos avanzada, hilos de ejecución concurrentes y una base de datos embebida garantizan que el 'Sistema Don Tomas' sea seguro, escalable, y muy eficiente en el uso de memoria. Agradecemos su tiempo y abrimos el espacio para cualquier duda que puedan tener."

@@ -10,16 +10,16 @@ import javafx.collections.ObservableList;
 
 public class Proveedor {
 
-    int id;
-    String name;
-    String document;
-    String phoneNum;
-    String rif;
-    String empresa;
-    String typeCharge;
-    String preferedproducts;
-    String lastPurchase; // Could be null for provider, maybe it's not needed, but keeping for compatibility if table had it
-    String addedDate;
+    public int id;
+    public String name;
+    public String document;
+    public String phoneNum;
+    public String rif;
+    public String empresa;
+    public String typeCharge;
+    public String preferedproducts;
+    public String lastPurchase; 
+    public String addedDate;
 
     public Proveedor(int id, String name, String document, String phoneNum, String rif, String empresa, String typeCharge, String preferedproducts, String lastPurchase, String addedDate) {
         this.id = id;

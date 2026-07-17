@@ -9,13 +9,13 @@ import javafx.collections.ObservableList;
 
 public class Producto {
 
-    int id;
-    String codigo;
-    String nombre;
-    String categoria;
-    int cantidad;
-    double precioUnitario;
-    String fechaRegistro;
+    public int id;
+    public String codigo;
+    public String nombre;
+    public String categoria;
+    public int cantidad;
+    public double precioUnitario;
+    public String fechaRegistro;
 
     public Producto(int id, String codigo, String nombre, String categoria, int cantidad, double precioUnitario, String fechaRegistro) {
         this.id = id;
