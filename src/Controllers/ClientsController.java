@@ -136,7 +136,7 @@ public class ClientsController {
         ClientTable.setItems(filteredClientList);
 
         // Reutilizamos el mismo set de opciones que el formulario, ya que tipo de cobranza es un catálogo cerrado
-        filterPayType.setItems(FXCollections.observableArrayList("Efectivo", "Transferencia", "Pago Móvil", "Crédito"));
+        filterPayType.setItems(clientPayType.getItems());
 
         // Live search + filtro avanzado en tiempo real
         searchField.textProperty().addListener((obs, oldValue, newValue) -> aplicarFiltros());

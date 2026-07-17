@@ -231,7 +231,7 @@ public class EmployeesController implements Initializable {
             // Actualizar la tabla
             employeeList.clear();
             Empleado.fillEmployeeList(employeeList);
-
+            
             // Refrescar el ComboBox de cargos por si se guardó un cargo nuevo que no estaba antes
             EmpleadoDAO cargoDao = new EmpleadoDAO();
             filterCargo.setItems(FXCollections.observableArrayList(cargoDao.obtenerCargosUnicos()));
@@ -272,6 +272,10 @@ public class EmployeesController implements Initializable {
                 // Actualizar tabla
                 employeeList.clear();
                 Empleado.fillEmployeeList(employeeList);
+
+                // Refrescar el ComboBox de cargos por si el cargo eliminado ya no existe en ningún empleado
+                EmpleadoDAO cargoDao = new EmpleadoDAO();
+                filterCargo.setItems(FXCollections.observableArrayList(cargoDao.obtenerCargosUnicos()));
                 
                 // Limpiar formulario si el empleado borrado estaba seleccionado
                 if (currentEmployeeId == selected.getId()) {

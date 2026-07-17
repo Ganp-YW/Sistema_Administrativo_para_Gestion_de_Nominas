@@ -83,6 +83,7 @@ public class InventoryController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         // Inicializar ComboBox
         invCategory.setItems(FXCollections.observableArrayList("Viveres en General", "Carne", "Pollo", "Pasta", "Arroz"));
+        filterCategory.setItems(invCategory.getItems());
 
         // Inicializar Columnas
         ColId.setCellValueFactory(new PropertyValueFactory<>("id"));
@@ -110,11 +111,6 @@ public class InventoryController implements Initializable {
 
         filteredProductList = new FilteredList<>(productList, p -> true);
         InventoryTable.setItems(filteredProductList);
-
-        // Poblar el ComboBox de categorías con los valores ya existentes en la BD (editable: se puede escribir una nueva)
-        InventarioDAO filterDao = new InventarioDAO();
-        List<String> categoriasExistentes = filterDao.obtenerCategoriasUnicas();
-        filterCategory.setItems(FXCollections.observableArrayList(categoriasExistentes));
 
         // Live search + filtro avanzado en tiempo real
         searchField.textProperty().addListener((obs, oldValue, newValue) -> aplicarFiltros());
@@ -249,10 +245,6 @@ public class InventoryController implements Initializable {
             productList.clear();
             Producto.fillInventoryList(productList);
             ViewManager.clearCache();
-
-            // Refrescar el ComboBox de categorías por si se guardó una categoría nueva
-            InventarioDAO categoriaDao = new InventarioDAO();
-            filterCategory.setItems(FXCollections.observableArrayList(categoriaDao.obtenerCategoriasUnicas()));
         } else {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error");

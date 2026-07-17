@@ -129,7 +129,7 @@ public class ProveedoresController implements Initializable {
         ProviderTable.setItems(filteredProviderList);
 
         // Mismo catálogo cerrado que usa el formulario de Proveedores (sin "Crédito", a diferencia de Clientes)
-        filterPayType.setItems(FXCollections.observableArrayList("Efectivo", "Transferencia", "Pago Mvil"));
+        filterPayType.setItems(providerPayType.getItems());
 
         // Live search + filtro avanzado en tiempo real
         searchField.textProperty().addListener((obs, oldValue, newValue) -> aplicarFiltros());
